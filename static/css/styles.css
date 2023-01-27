@@ -1,0 +1,250 @@
+body {
+  background-color: #6ca486;
+  margin: 15px;
+}
+
+h1 {
+  font-family: 'Montserrat';
+  margin: 10px 0 15px 30px;
+  color: #0f6336;
+}
+
+h3 {
+  font-family: "Montserrat";
+  margin: 25px 0 25px 25px;
+  color: #0f6336;
+}
+
+h2 {
+  display: inline-block;
+  font-family: 'Montserrat';
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.top-container {
+  margin: 15px auto;
+  height: auto;
+  width: 90%;
+  background-color: white;
+  border-radius: 5px 5px;
+  position: relative;
+}
+
+.logo-image {
+  width: 45%;
+}
+
+.buttons-div {
+  width: 16.5%;
+  display: inline-block;
+  position: absolute;
+  top: 13%;
+  right: 2.5%;
+}
+
+.upper-button {
+  margin-bottom: 5px;
+}
+
+.bottom-container-homepage {
+  margin: auto;
+  width: 90%;
+  height: 1000px;
+  position: relative;
+}
+
+.bottom-container {
+  margin: auto;
+  width: 90%;
+  height: 650px;
+  position: relative;
+}
+
+.advanced-search {
+  background-color: white;
+  height: 650px;
+  width: 23%;
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  border-radius: 5px 5px;
+}
+
+.nature-delib, .nature-doc, .between-date, .title-contains, .title-contains-not, .text-contains, .text-contains-not {
+  margin: 0 15px 20px 30px;
+  font-family: "Montserrat";
+}
+
+.search-button {
+  position: relative;
+  text-align: center;
+  margin-top: 45px;
+}
+
+label {
+  display: block;
+}
+
+hr {
+  border-style: dotted none none;
+  border-color: #6ca486;
+  border-width: 3px;
+  height: 0px;
+  width: 85%;
+  position: relative;
+  bottom: 1%;
+}
+
+.results {
+  background-color: white;
+  height: 1000px;
+  width: 76%;
+  margin-left: 8px;
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  border-radius: 5px 5px;
+}
+
+.latest-deliberations {
+  width: 100%;
+  height: 460px;
+  background-color: #F5FAF7;
+  border-radius: 5px;
+  overflow-y: scroll;
+}
+
+.statistical-information {
+  width: 100%;
+  height: 350px;
+  background-color: #F5FAF7;
+  border-radius: 5px;
+  overflow-y: scroll;
+}
+
+.hr-latest-results {
+  width: 95%;
+}
+
+.results-table-div {
+  position: relative;
+  margin: auto;
+  /*background-color: #a5bfe8;*/
+  height: 84%;
+  width: 95%;
+  border-radius: 5px 5px;
+}
+
+.results-p {
+  display: inline;
+  font-size: 1em;
+  font-family: 'Montserrat';
+  font-weight: lighter;
+  white-space: normal;
+}
+
+.a-tag {
+  text-decoration: none;
+  color: black;
+}
+
+.a-tag:hover {
+  text-decoration: underline;
+}
+
+.right-arrow {
+  display: block;
+  font-family: 'Roboto';
+  font-weight: bold;
+  color: #0f6336;
+}
+
+.article {
+  margin: 0 15px;
+}
+
+.about-container {
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+}
+
+.about-button {
+  margin: 15px 0 15px 30px;
+}
+
+.stats-button {
+  position: absolute;
+  top: 15px;
+  right: 30px;
+}
+
+#contact-button {
+  position: absolute;
+  top: 16%;
+}
+
+.form {
+  margin: 0 0 30px 50px;
+  font-family: 'Montserrat';
+
+}
+
+.form-label {
+  margin: 10px 0 3px 5px;
+}
+
+.message-submit-div {
+  margin: 20px 0;
+}
+
+textarea {
+  resize: none;
+  width: 500px;
+  height: 160px;
+}
+
+button, .message-submit {
+  background-color: #FFFFFF;
+  border: 1px solid #222222;
+  border-radius: 5px;
+  box-sizing: border-box;
+  color: #0f6336;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Montserrat";
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  margin: 0;
+  outline: none;
+  padding: 10px 20px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition: box-shadow .2s, -ms-transform .1s, -webkit-transform .1s, transform .1s;
+  user-select: none;
+  -webkit-user-select: none;
+  width: 200px;
+}
+
+button:focus-visible {
+  box-shadow: #222222 0 0 0 2px, rgba(255, 255, 255, 0.8) 0 0 0 4px;
+  transition: box-shadow .2s;
+}
+
+button:active {
+  background-color: #F7F7F7;
+  border-color: #0f6336;
+  transform: scale(.96);
+}
+
+button:disabled {
+  border-color: #0f6336;
+  color: #0f6336;
+  cursor: not-allowed;
+  opacity: 1;
+}
