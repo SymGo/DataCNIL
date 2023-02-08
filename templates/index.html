@@ -84,81 +84,26 @@
         <div class="results-table-div">
 
           <div class="latest-deliberations">
+            {% for index, row in df.iterrows(): %}
             <article class="article">
-              <h2>Délibération 2007-145 du 21 juin 2007<span> — </span>
+              <h2>{{row['Titre']}}<span> — </span>
                 <p class="results-p">
                   <a href="" class="a-tag">
-                    Délibération autorisant la communauté d'agglomération de la région nazairienne et de l'estuaire ARENE) à mettre en oeuvre un traitement automatisé de données à caractère personnel comportant un système d'information géographique à partir des données cadastrales.
+                    {{row['TitreLong']}}
                   </a>
                 </p>
               </h2>
             </article>
-
-            <article class="article">
-              <h2>Délibération 2007 du 21 juin 2007<span> — </span>
-                <p class="results-p">
-                  <a href="" class="a-tag">
-                    Délibération autorisant la communauté d'agglomération de la région nazairienne et de l'estuaire ARENE) à mettre en oeuvre un traitement automatisé de données à caractère personnel comportant un système d'information géographique à partir des données cadastrales.
-                  </a>
-                </p>
-              </h2>
-            </article>
-
-            <article class="article">
-              <h2>Délibération 2007-145 du 21 juin 2007<span> — </span>
-                <p class="results-p">
-                  <a href="" class="a-tag">
-                    Délibération autorisant la communauté d'agglomération de la région nazairienne et de l'estuaire ARENE) à mettre en oeuvre un traitement automatisé de données à caractère personnel comportant un système d'information géographique à partir des données cadastrales.
-                  </a>
-                </p>
-              </h2>
-            </article>
-
-            <article class="article">
-              <h2>Délibération 2007-145 du 21 juin 2007<span> — </span>
-                <p class="results-p">
-                  <a href="" class="a-tag">
-                    Délibération autorisant la communauté d'agglomération de la région nazairienne et de l'estuaire ARENE) à mettre en oeuvre un traitement automatisé de données à caractère personnel comportant un système d'information géographique à partir des données cadastrales.
-                  </a>
-                </p>
-              </h2>
-            </article>
-
-            <article class="article">
-              <h2>Délibération 2007-145 du 21 juin 2007<span> — </span>
-                <p class="results-p">
-                  <a href="" class="a-tag">
-                    Délibération autorisant la communauté d'agglomération de la région nazairienne et de l'estuaire ARENE) à mettre en oeuvre un traitement automatisé de données à caractère personnel comportant un système d'information géographique à partir des données cadastrales.
-                  </a>
-                </p>
-              </h2>
-            </article>
-
-            <article class="article">
-              <h2>Délibération 2007-145 du 21 juin 2007<span> — </span>
-                <p class="results-p">
-                  <a href="" class="a-tag">
-                    Délibération autorisant la communauté d'agglomération de la région nazairienne et de l'estuaire ARENE) à mettre en oeuvre un traitement automatisé de données à caractère personnel comportant un système d'information géographique à partir des données cadastrales.
-                  </a>
-                </p>
-              </h2>
-            </article>
-
-            <article class="article">
-              <h2>Délibération 2007-145 du 21 juin 2007<span> — </span>
-                <p class="results-p">
-                  <a href="" class="a-tag">
-                    Délibération autorisant la communauté d'agglomération de la région nazairienne et de l'estuaire ARENE) à mettre en oeuvre un traitement automatisé de données à caractère personnel comportant un système d'information géographique à partir des données cadastrales.
-                  </a>
-                </p>
-              </h2>
-            </article>
+            {% endfor %}
+  
           </div>
 
           <h3>Informations statistiques</h3>
           <hr class="hr-latest-results">
 
           <div class="statistical-information">
+            
+            <img src= {{ url }} alt="Chart">
 
 
           </div>
