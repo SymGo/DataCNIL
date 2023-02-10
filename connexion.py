@@ -4,13 +4,13 @@ import mysql.connector as mysql
 import pandas as pd
 import pymysql
 
-
-DATABASE_URI = "mysql+pymysql://{DB_USER}:{DB_PASS}@{DB_ADDR}/{DB_NAME}".format(
-    DB_USER="merabetw",
-    DB_PASS="&merabetw,",
-    DB_ADDR="i3l.univ-grenoble-alpes.fr:3306",
-    DB_NAME="merabetw",
-)
+#
+# DATABASE_URI = "mysql+pymysql://{DB_USER}:{DB_PASS}@{DB_ADDR}/{DB_NAME}".format(
+#     DB_USER="dimitrim",
+#     DB_PASS="&dimitrim,",
+#     DB_ADDR="i3l.univ-grenoble-alpes.fr:3306",
+#     DB_NAME="merabetw",
+# )
 
 
 def open_ssh_tunnel(verbose=False):
@@ -26,11 +26,10 @@ def open_ssh_tunnel(verbose=False):
     global tunnel
     tunnel = SSHTunnelForwarder(
         ('i3l.univ-grenoble-alpes.fr', 22),
-        ssh_username = 'merabetw',
-        ssh_pkey = 'static/SSHprivatekey',
+        ssh_username = 'dimitrim',
+        ssh_pkey = 'static/SSHKey2',
         remote_bind_address = ('localhost', 3306)
     )
-    
     tunnel.start()
 
 def mysql_connect():
@@ -44,7 +43,7 @@ def mysql_connect():
         host='127.0.0.1',
         user='merabetw',
         passwd='&merabetw,',
-        db='merabetw',
+        db='TL_DataCNIL',
         # db='TL_DataCNIL',
         port=tunnel.local_bind_port
     )

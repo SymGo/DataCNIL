@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request
-from flask_mysqldb import MySQL
-from flask_wtf.csrf import CSRFProtect
+#from flask_mysqldb import MySQL
 from sshtunnel import SSHTunnelForwarder
 import pandas as pd 
 import mysql.connector as mysql
@@ -9,7 +8,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import smtplib
 import re
-from flask_sqlalchemy import SQLAlchemy
+#from flask_sqlalchemy import SQLAlchemy
 import connexion
 
 
@@ -28,14 +27,15 @@ def index():
     connexion.mysql_connect()
 
     df_latest_del = connexion.run_query("""SELECT IDDelib, Titre, TitreLong, DateTexte 
-                                FROM Delib 
+                                FROM Deliberation 
                                 ORDER BY DateTexte DESC 
                                 LIMIT 10""")
 
     df_delib_graph = connexion.run_query("""SELECT YEAR(DateTexte) AS year, COUNT(IDDelib) AS nb 
-                                        FROM Delib 
+                                        FROM Deliberation 
                                         GROUP BY year 
                                         ORDER BY year ASC""")
+
     x = list(df_delib_graph['year'])
     y = list(df_delib_graph['nb'])
     plt.bar(x, y, color ='maroon', width = 0.8)
@@ -46,8 +46,8 @@ def index():
     plt.savefig('static/images/delib.png')
     url = 'static/images/delib.png'
 
-    df_natur_doc = connexion.run_query("SELECT NatureDocument, COUNT(NatureDocument) AS NbDoc FROM Delib GROUP BY NatureDocument")
-    df_natur_delib = connexion.run_query("SELECT NatureDeliberation, COUNT(NatureDeliberation) AS NbDelib FROM Delib GROUP BY NatureDeliberation")
+    df_natur_doc = connexion.run_query("SELECT NatureDocument, COUNT(NatureDocument) AS NbDoc FROM Deliberation GROUP BY NatureDocument")
+    df_natur_delib = connexion.run_query("SELECT NatureDeliberation, COUNT(NatureDeliberation) AS NbDelib FROM Deliberation GROUP BY NatureDeliberation")
 
     connexion.mysql_disconnect()
     connexion.close_ssh_tunnel()
