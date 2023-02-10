@@ -1,35 +1,68 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Recherche</title>
-    <link rel="stylesheet" type="text/css" href="css/styles.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="logo/favicon_1.ico">
-  </head>
-  <body>
+{% extends "base.html" %}
+{% block title %}Recherche{% endblock %}
+{% block content %}
 
-    <div class="top-container">
-      <img src="logo/logo-transparent-png.png" alt="" class="logo-image">
-      <div class="buttons-div">
-        <button class="upper-button" type="button" name="button">A propos</button>
-        <button type="button" name="button">Nous contacter</button>
-      </div>
+<div class="top-container">
+  <a href="{{ url_for('index') }}"><img src="static/logo/logo-transparent-png.png" alt="" class="logo-image"></a>
+  <div class="buttons-div">
+    <a href="{{ url_for('get_about') }}"><button class="upper-button" type="button" name="button">A propos</button></a>
+    <a href="{{ url_for('get_contact') }}"><button type="button" name="button">Nous contacter</button></a>
+  </div>
+</div>
+
+<div class="bottom-container">
+  <div class="about-container">
+    <a href="{{ url_for('index') }}"><button type="button" name="button" class="about-button">Page d'accueil</button></a>
+    <a href="{{ url_for('get_stats') }}"><button type="button" name="button" class="stats-button">Statistiques</button></a>
+    <hr class="hr-latest-results">
+    <h1>Resultats de la rechreche</h1>
+
+    <div class="chosen_values">
+      {% if nature_doc: %}
+      <h4>Nature document :</h4>
+      {% for item in nature_doc: %}
+      <p class="p-chosen-values">{{ item }}</p>
+      {% endfor %}
+      {% endif %}
+
+      {% if nature_delib: %}
+      <h4>Nature de la déliberation :</h4>
+      {% for item in nature_delib: %}
+      <p class="p-chosen-values">{{ item }}</p>
+      {% endfor %}
+      {% endif %}
+
+      {% if from_date: %}
+      <h4>De :</h4>
+      <p class="p-chosen-values">{{ from_date }}</p>
+      {% endif %}
+
+      {% if to_date: %}
+      <h4>à :</h4>
+      <p class="p-chosen-values"> {{ to_date }}</p>
+      {% endif %}
+
+      {% if title_contains: %}
+      <h4>Le titre contient :</h4>
+      <p class="p-chosen-values">{{ title_contains }}</p>
+      {% endif %}
+
+      {% if title_contains_not: %}
+      <h4>Le titre ne contient pas :</h4>
+      <p class="p-chosen-values">{{ title_contains_not }}</p>
+      {% endif %}
+
+      {% if text_contains: %}
+      <h4>Le text contient :</h4>
+      <p class="p-chosen-values">{{ text_contains }}</p>
+      {% endif %}
+
+      {% if text_contains_not: %}
+      <h4>et ce qui ne contient pas :</h4>
+      <p class="p-chosen-values">{{ text_contains_not }}</p>
+      {% endif %}
     </div>
-
-    <div class="bottom-container">
-      <div class="about-container">
-        <button type="button" name="button" class="about-button">Page d'accueil</button>
-        <button type="button" name="button" class="stats-button">Statistiques</button>
-        <hr class="hr-latest-results">
-        <h1>Resultats de la rechreche</h1>
-        <h3>...</h3>
-
-
-
-      </div>
-
-    </div>
-
-  </body>
-</html>
+  </div>
+</div>
+{% endblock %}
+  

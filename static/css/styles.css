@@ -9,17 +9,29 @@ h1 {
   color: #0f6336;
 }
 
+h2 {
+  display: inline-block;
+  font-family: 'Montserrat';
+  font-size: 1em;
+  font-weight: bold;
+}
+
 h3 {
   font-family: "Montserrat";
   margin: 25px 0 25px 25px;
   color: #0f6336;
 }
 
-h2 {
-  display: inline-block;
-  font-family: 'Montserrat';
-  font-size: 1em;
-  font-weight: bold;
+h4 {
+    font-family: "Montserrat";
+    padding: 15px 0 0 15px;
+    color: #0f6336;
+    display: inline-flex;
+    margin: 0;
+}
+
+select {
+    font-family: 'Montserrat';
 }
 
 .top-container {
@@ -50,7 +62,7 @@ h2 {
 .bottom-container-homepage {
   margin: auto;
   width: 90%;
-  height: 1000px;
+  height: 1450px;
   position: relative;
 }
 
@@ -66,7 +78,8 @@ h2 {
   height: 650px;
   width: 23%;
   display: inline-block;
-  position: absolute;
+  position: sticky;
+  top: 0;
   left: 0;
   border-radius: 5px 5px;
 }
@@ -86,6 +99,18 @@ label {
   display: block;
 }
 
+.chosen_values {
+    border-radius: 5px;
+    background-color: #F5FAF7;
+    margin: 0 30px;
+}
+
+.p-chosen-values {
+    font-family: "Montserrat";
+    color: #0f6336;
+    display: inline-flex;
+}
+
 hr {
   border-style: dotted none none;
   border-color: #6ca486;
@@ -93,12 +118,12 @@ hr {
   height: 0px;
   width: 85%;
   position: relative;
-  bottom: 1%;
+  bottom: 10px;
 }
 
 .results {
   background-color: white;
-  height: 1000px;
+  height: 1450px;
   width: 76%;
   margin-left: 8px;
   display: inline-block;
@@ -120,7 +145,6 @@ hr {
   height: 350px;
   background-color: #F5FAF7;
   border-radius: 5px;
-  overflow-y: scroll;
 }
 
 .hr-latest-results {
@@ -131,7 +155,7 @@ hr {
   position: relative;
   margin: auto;
   /*background-color: #a5bfe8;*/
-  height: 84%;
+  height: 93%;
   width: 95%;
   border-radius: 5px 5px;
 }
@@ -206,7 +230,7 @@ textarea {
   height: 160px;
 }
 
-button, .message-submit {
+button, .message-submit, .search-button input[type="submit"] {
   background-color: #FFFFFF;
   border: 1px solid #222222;
   border-radius: 5px;
@@ -229,6 +253,7 @@ button, .message-submit {
   user-select: none;
   -webkit-user-select: none;
   width: 200px;
+  max-width: 200px;
 }
 
 button:focus-visible {
@@ -247,4 +272,74 @@ button:disabled {
   color: #0f6336;
   cursor: not-allowed;
   opacity: 1;
+}
+
+.checkbox {
+  display: flex;
+}
+
+.nature-delib {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+  width: 200px;
+}
+
+.dropdown-header {
+  padding: 0px;
+  border: 1px solid grey;
+  border-radius: 5%;
+  cursor: pointer;
+}
+
+.selected-options {
+  display: inline-block;
+}
+
+.dropdown-arrow {
+  float: right;
+  width: 0;
+  height: 0;
+  margin-top: 8px;
+  margin-right: 3px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #333;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 25%;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 1;
+}
+
+.dropdown-option {
+  display: flex;
+  padding: 2px 0;
+}
+
+.dropdown-option input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.dropdown-container:hover .dropdown-menu,
+.dropdown-container:focus .dropdown-menu {
+  display: block;
+}
+
+.error {
+  font-family: "Montserrat";
+  font-size: 11px;
+  color: red;
+  display: inline;
 }

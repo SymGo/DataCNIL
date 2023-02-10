@@ -1,33 +1,21 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Informations statistiques</title>
-    <link rel="stylesheet" type="text/css" href="css/styles.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="logo/favicon_1.ico">
-  </head>
-  <body>
-    <div class="top-container">
-      <img src="logo/logo-transparent-png.png" alt="" class="logo-image">
-      <div class="buttons-div">
-        <button class="upper-button" type="button" name="button">A propos</button>
-        <button type="button" name="button">Nous contacter</button>
-      </div>
-    </div>
+{% extends "base.html" %}
+{% block title %}Informations statistiques{% endblock %}
+{% block content %}
+<div class="top-container">
+  <a href="{{ url_for('index') }}"><img src="static/logo/logo-transparent-png.png" alt="" class="logo-image"></a>
+  <div class="buttons-div">
+    <a href="{{ url_for('get_about') }}"><button class="upper-button" type="button" name="button">A propos</button></a>
+    <a href="{{ url_for('get_contact') }}"><button type="button" name="button">Nous contacter</button></a>
+  </div>
+</div>
 
-    <div class="bottom-container">
-      <div class="about-container">
-        <button type="button" name="button" class="about-button">Résultats de recherche</button>
-        <hr class="hr-latest-results">
-        <h1>Statistiques</h1>
-        <h3>To be filled out</h3>
+<div class="bottom-container">
+  <div class="about-container">
+    <a href="{{ url_for('get_results') }}"><button type="button" name="button" class="about-button">Résultats de recherche</button></a>
+    <hr class="hr-latest-results">
+    <h1>Statistiques</h1>
+    <h3>To be filled out</h3>
 
-
-
-      </div>
-
-    </div>
-
-  </body>
-</html>
+  </div>
+</div>
+{% endblock %}
