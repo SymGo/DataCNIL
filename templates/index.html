@@ -1,121 +1,120 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analyseur DataCNIL</title>
-    <link rel="stylesheet" type="text/css" href="static/css/styles.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="static/logo/favicon_1.ico">
+{% extends "base.html" %}
+{% block title %}Analyseur DataCNIL{% endblock %}
+{% block content %}
+<div class="top-container">
+  <img src="static/logo/logo-transparent-png.png" alt="" class="logo-image">
+  <div class="buttons-div">
+    <a href="{{ url_for('get_about') }}"><button class="upper-button" type="button" name="button">A propos</button></a>
+    <a href="{{ url_for('get_contact') }}"><button type="button" name="button">Nous contacter</button></a>
+  </div>
+</div>
 
-  </head>
-  <body>
-
-    <div class="top-container">
-      <img src="static/logo/logo-transparent-png.png" alt="" class="logo-image">
-      <div class="buttons-div">
-        <button class="upper-button" type="button" name="button">A propos</button>
-        <button type="button" name="button">Nous contacter</button>
-      </div>
-
-    </div>
-
-    <div class="bottom-container-homepage">
-
-      <div class="advanced-search">
-        <h3>Recherche avancée</h3>
-        <hr>
-
-        <div class="nature-doc">
-          <label>Nature du document</label>
-          <select>
-            <option>
-
-            </option>
-          </select>
-        </div>
-
-        <div class="nature-delib">
-          <label>Nature de la delibération</label>
-          <select>
-            <option>
-
-            </option>
-          </select>
-        </div>
-
-        <div class="between-date">
-          <label>De</label>
-          <input type="date" id="from-date" name="from-date">
-          <label>à</label>
-          <input type="date" id="to-date" name="to-date">
-        </div>
-
-        <div class="title-contains">
-          <label>Titre contient</label>
-          <input type="text" name="title-contains" value="">
-        </div>
-
-        <div class="title-contains-not">
-          <label>Titre ne contient pas</label>
-          <input type="text" name="title-contains-not" value="">
-        </div>
-
-        <div class="text-contains">
-          <label>Texte contient</label>
-          <input type="text" name="text-contains" value="">
-        </div>
-
-        <div class="text-contains-not">
-          <label>Texte ne contient pas</label>
-          <input type="text" name="title-contains" value="">
-        </div>
-
-        <div class="search-button">
-          <button class="">Recherche</button>
-        </div>
-
-      </div>
-
-      <div class="results">
-        <h3>Dernières déliberations</h3>
-        <hr class="hr-latest-results">
-
-        <div class="results-table-div">
-
-          <div class="latest-deliberations">
-            {% for index, row in df.iterrows(): %}
-            <article class="article">
-              <h2>{{row['Titre']}}<span> — </span>
-                <p class="results-p">
-                  <a href="" class="a-tag">
-                    {{row['TitreLong']}}
-                  </a>
-                </p>
-              </h2>
-            </article>
+<div class="bottom-container-homepage">
+  <div class="advanced-search">
+    <h3>Recherche avancée</h3>
+    <hr>
+    <form method="POST" action="{{ url_for('index') }}">
+      <div class="nature-doc">
+        <label>Nature du document</label>
+          <div class="checkbox">
+            {% for index, row in df_natur_doc.iterrows(): %}
+            <input type="checkbox" name="nature_doc_box" id="doc_1" value="{{ row['NatureDocument'] }}"><label for="doc_1">{{ row['NatureDocument'] }} ({{ row['NbDoc'] }})</label>
             {% endfor %}
-  
-          </div>
 
-          <h3>Informations statistiques</h3>
-          <hr class="hr-latest-results">
-
-          <div class="statistical-information">
-            
-            <img src= {{ url }} alt="Chart">
-
+            <!-- <input type="checkbox" name="nature_doc_box" id="doc_1" value="Décision"><label for="doc_1">Décision</label> -->
 
           </div>
+          <!-- <div class="checkbox">
+            <input type="checkbox" name="nature_doc_box" id="doc_2" value="Déliberation"><label for="doc_2">Déliberation</label>
+          </div> -->
+      </div>
 
-
+      <div class="nature-delib">
+        <label>Nature de la délibération</label>
+        <div class="dropdown-container">
+          <div class="dropdown-header">
+            <div class="selected-options"></div>
+            <div class="dropdown-arrow"></div>
+          </div>
+          <ul class="dropdown-menu">
+            {% for index, row in df_natur_delib.iterrows(): %}
+            <li class="dropdown-option">
+              <input type="checkbox" name="nature_delib_box" id="delib_1" value="{{ row['NatureDeliberation'] }}"><label for="delib_1">{{ row['NatureDeliberation'] }} ({{ row['NbDelib'] }})</label>
+            </li>            
+            {% endfor %}
+       
+          </ul>
         </div>
+      </div>
+
+      <div class="between-date">
+        <label for="from-date">De</label>
+        <input type="date" id="from-date" name="from-date" value="from-date">
+        <label for="to-date">à</label>
+        <input type="date" id="to-date" name="to-date" value="to-date">
+      </div>
+
+      <div class="title-contains">
+        <label>Titre contient</label>
+        <input type="text" name="title-contains" value="">
+      </div>
+
+      <div class="title-contains-not">
+        <label>Titre ne contient pas</label>
+        <input type="text" name="title-contains-not" value="">
+      </div>
+
+      <div class="text-contains">
+        <label>Texte contient</label>
+        <input type="text" name="text-contains" value="">
+      </div>
+
+      <div class="text-contains-not">
+        <label>Texte ne contient pas</label>
+        <input type="text" name="text-contains-not" value="">
+      </div>
+
+      <div class="search-button">
+        <input type="submit" value="Recherche">
+      </div>
+    </form>
+
+  </div>
+
+  <div class="results">
+    <h3>Dernières déliberations</h3>
+    <hr class="hr-latest-results">
+
+    <div class="results-table-div">
+      <div class="latest-deliberations">
+        <article class="article">
+          {% for index, row in df_latest_del.iterrows() %}
+          <h2>{{ row['Titre'] }}<span> — </span>
+            <p class="results-p">
+              <a href="" class="a-tag">
+                {{ row['TitreLong'] }}
+              </a>
+            </p>
+          </h2>
+          {% endfor %}
+        </article>
+      </div>
+
+      <h3>Informations statistiques</h3>
+      <hr class="hr-latest-results">
+
+      <div class="statistical-information">
 
       </div>
 
+      <h3>Avertissement</h3>
+      <hr class="hr-latest-results">
+
+      <div class="statistical-information">
+
+
+      </div>
     </div>
-
-
-
-  </body>
-</html>
+  </div>
+</div>
+{% endblock %}

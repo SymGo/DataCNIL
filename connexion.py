@@ -2,6 +2,16 @@ import sshtunnel
 from sshtunnel import SSHTunnelForwarder, logging
 import mysql.connector as mysql
 import pandas as pd
+import pymysql
+
+
+DATABASE_URI = "mysql+pymysql://{DB_USER}:{DB_PASS}@{DB_ADDR}/{DB_NAME}".format(
+    DB_USER="merabetw",
+    DB_PASS="&merabetw,",
+    DB_ADDR="i3l.univ-grenoble-alpes.fr:3306",
+    DB_NAME="merabetw",
+)
+
 
 def open_ssh_tunnel(verbose=False):
     """Open an SSH tunnel and connect using a username and password.
@@ -34,7 +44,8 @@ def mysql_connect():
         host='127.0.0.1',
         user='merabetw',
         passwd='&merabetw,',
-        db='TL_DataCNIL',
+        db='merabetw',
+        # db='TL_DataCNIL',
         port=tunnel.local_bind_port
     )
 
