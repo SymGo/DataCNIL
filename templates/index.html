@@ -13,20 +13,14 @@
   <div class="advanced-search">
     <h3>Recherche avancée</h3>
     <hr>
-    <form method="POST" action="{{ url_for('index') }}">
+    <form method="POST" action="{{ url_for('get_results') }}">
       <div class="nature-doc">
         <label>Nature du document</label>
           <div class="checkbox">
-            {% for index, row in df_natur_doc.iterrows(): %}
-            <input type="checkbox" name="nature_doc_box" id="doc_1" value="{{ row['NatureDocument'] }}"><label for="doc_1">{{ row['NatureDocument'] }} ({{ row['NbDoc'] }})</label>
+            {% for row in nature_doc: %}
+            <input type="checkbox" name="nature_doc_box" id="doc_1" value="{{ row.NatureDocument }}"><label for="doc_1">{{ row.NatureDocument }}</label>
             {% endfor %}
-
-            <!-- <input type="checkbox" name="nature_doc_box" id="doc_1" value="Décision"><label for="doc_1">Décision</label> -->
-
           </div>
-          <!-- <div class="checkbox">
-            <input type="checkbox" name="nature_doc_box" id="doc_2" value="Déliberation"><label for="doc_2">Déliberation</label>
-          </div> -->
       </div>
 
       <div class="nature-delib">
@@ -37,12 +31,11 @@
             <div class="dropdown-arrow"></div>
           </div>
           <ul class="dropdown-menu">
-            {% for index, row in df_natur_delib.iterrows(): %}
+            {% for row in nature_delib: %}
             <li class="dropdown-option">
-              <input type="checkbox" name="nature_delib_box" id="delib_1" value="{{ row['NatureDeliberation'] }}"><label for="delib_1">{{ row['NatureDeliberation'] }} ({{ row['NbDelib'] }})</label>
+              <input type="checkbox" name="nature_delib_box" id="delib_1" value="{{ row.NatureDeliberation }}"><label for="delib_1">{{ row.NatureDeliberation }}</label>
             </li>            
             {% endfor %}
-       
           </ul>
         </div>
       </div>
@@ -88,11 +81,11 @@
     <div class="results-table-div">
       <div class="latest-deliberations">
         <article class="article">
-          {% for index, row in df_latest_del.iterrows() %}
-          <h2>{{ row['Titre'] }}<span> — </span>
+          {% for row in latest_delib: %}
+          <h2>{{ row.Titre }}<span> — </span>
             <p class="results-p">
-              <a href="" class="a-tag">
-                {{ row['TitreLong'] }}
+              <a href="{{ url_for('get_article', IDDelib=row['IDDelib']) }} " class="a-tag">
+                {{ row.TitreLong }}
               </a>
             </p>
           </h2>
