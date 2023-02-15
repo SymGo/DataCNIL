@@ -13,7 +13,7 @@
 <div class="bottom-container">
   <div class="about-container">
     <a href="{{ url_for('index') }}"><button type="button" name="button" class="about-button">Page d'accueil</button></a>
-    <a href="{{ url_for('get_stats') }}"><button type="button" name="button" class="stats-button">Statistiques</button></a>
+    <a href="{{ url_for('stats_search_query') }}"><button type="button" name="button" class="stats-button">Statistiques</button></a>
     <hr class="hr-latest-results">
     <h1>Resultats de la rechreche</h1>
 
@@ -62,17 +62,8 @@
       <p class="p-chosen-values">{{ text_contains_not }}</p>
       {% endif %}
 
-
     </div>
 
-    {% if article: %}
-    <div class="chosen_article">
-      <h3>{{ article['Titre'] }}</h3>
-      <p class="p-chosen-article">{{ article['TitreLong'] }}</p>
-      <p class="p-chosen-article">{{ article['Contenu'] }}</p>
-    </div>
-    {% endif %}
-    {% if search_result: %}
     <div class="results-table-div">
       <div class="latest-deliberations">
         <article class="article">
@@ -91,7 +82,6 @@
         </article>
       </div>
     </div>
-    {% endif %}
   </div>
 </div>
 {% endblock %}

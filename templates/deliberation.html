@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Recherche{% endblock %}
+{% block content %}
+
+<div class="top-container">
+  <a href="{{ url_for('index') }}"><img src="static/logo/logo-transparent-png.png" alt="" class="logo-image"></a>
+  <div class="buttons-div">
+    <a href="{{ url_for('get_about') }}"><button class="upper-button" type="button" name="button">A propos</button></a>
+    <a href="{{ url_for('get_contact') }}"><button type="button" name="button">Nous contacter</button></a>
+  </div>
+</div>
+
+<div class="bottom-container">
+  <div class="about-container">
+    <a href="{{ url_for('index') }}"><button type="button" name="button" class="about-button">Page d'accueil</button></a>
+    <a href="{{ url_for('stats_deliberation') }}"><button type="button" name="button" class="stats-button">Statistiques</button></a>
+    <hr class="hr-latest-results">
+    <h1>Resultat</h1>
+
+    <div class="chosen_article">
+      <h3>{{ deliberation['Titre'] }}</h3>
+      <p class="p-chosen-article">{{ deliberation['TitreLong'] }}</p>
+      <p class="p-chosen-article">{{ deliberation['Contenu'] }}</p>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+

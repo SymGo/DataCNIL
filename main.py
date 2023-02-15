@@ -1,23 +1,12 @@
-from flask import Flask, render_template, request
-<<<<<<< HEAD
-#from flask_mysqldb import MySQL
-=======
->>>>>>> 489ab7137fb0b7f5ab9b6b84f50023cdd6a4643e
+from flask import Flask, render_template, request, session, url_for
 from sshtunnel import SSHTunnelForwarder
-import pandas as pd 
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.pyplot
 import smtplib
 import re
-<<<<<<< HEAD
-#from flask_sqlalchemy import SQLAlchemy
-import connexion
-=======
 from sqlalchemy import *
-from sqlalchemy.sql import text
 from sqlalchemy.orm import sessionmaker
->>>>>>> 489ab7137fb0b7f5ab9b6b84f50023cdd6a4643e
+from flask import jsonify
 
 
 # Constants for email and password
@@ -27,103 +16,70 @@ OWN_PASSWORD = 'ykordwhlvmciffbw'
 # Create a Flask app instance
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'my_secret_key'
-<<<<<<< HEAD
-# app.config ['SQLALCHEMY_DATABASE_URI'] = connexion.DATABASE_URI
-# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-# db = SQLAlchemy(app)
-
-@app.route("/", methods=('GET', 'POST'))
-def index():    
-    connexion.open_ssh_tunnel()
-    connexion.mysql_connect()
-
-    df_latest_del = connexion.run_query("""SELECT IDDelib, Titre, TitreLong, DateTexte 
-                                FROM Deliberation 
-                                ORDER BY DateTexte DESC 
-                                LIMIT 10""")
-
-    df_delib_graph = connexion.run_query("""SELECT YEAR(DateTexte) AS year, COUNT(IDDelib) AS nb 
-                                        FROM Deliberation 
-                                        GROUP BY year 
-                                        ORDER BY year ASC""")
-
-    x = list(df_delib_graph['year'])
-    y = list(df_delib_graph['nb'])
-    plt.bar(x, y, color ='maroon', width = 0.8)
-    plt.xlabel("Année")
-    plt.xticks(rotation=90, ha='right')
-    plt.ylabel("Nombre de délibérations")
-    plt.title("Nobmre de délibérations par année")
-    plt.savefig('static/images/delib.png')
-    url = 'static/images/delib.png'
-
-    df_natur_doc = connexion.run_query("SELECT NatureDocument, COUNT(NatureDocument) AS NbDoc FROM Deliberation GROUP BY NatureDocument")
-    df_natur_delib = connexion.run_query("SELECT NatureDeliberation, COUNT(NatureDeliberation) AS NbDelib FROM Deliberation GROUP BY NatureDeliberation")
-
-    connexion.mysql_disconnect()
-    connexion.close_ssh_tunnel()
-=======
 
 with SSHTunnelForwarder(
         ('i3l.univ-grenoble-alpes.fr', 22),
-        ssh_username='merabetw',
-        ssh_pkey='static/SSHprivatekey',
+        ssh_username='dimitrim',
+        ssh_pkey='static/SSHKey2',
         remote_bind_address=('localhost', 3306)
 ) as tunnel:
     tunnel.start()
     print('Server connected via SSH...')
     local_port = str(tunnel.local_bind_port)
+
+    # connection to the database with sqlalchemy engine
     engine = create_engine('mysql+pymysql://merabetw:&merabetw,@localhost:' + local_port + '/merabetw')
 
+    # retrieval of existing tables in database
     metadata = MetaData()
     deliberation = Table('Deliberation', metadata, autoload_with=engine)
     token = Table('Token', metadata, autoload_with=engine)
     token2deliberation = Table('Token2Deliberation', metadata, autoload_with=engine)
 
-
-    # Create a single session for the entire application
+    # Create a single session with the db
     Session = sessionmaker(bind=engine)
-    # session = Session()
-
-    latest_delib = None
-    search_result = None
     
     # Route for the homepage
-    @app.route("/", methods=('GET', 'POST'))
+    @app.route("/", methods=['GET', 'POST'])
     def index():
-        with Session() as session:
-            global latest_delib
+        with Session() as db_session:
             latest_delib = (
-                session.query(deliberation.c).order_by(desc(deliberation.c.DateTexte)).limit(10).all()
+                db_session.query(deliberation.c).order_by(desc(deliberation.c.DateTexte)).limit(10).all()
             ) 
-
             nature_doc = (
-                session.query(deliberation.c.NatureDocument, func.count(deliberation.c.NatureDocument).label("NbDoc"))
+                db_session.query(deliberation.c.NatureDocument, func.count(deliberation.c.NatureDocument).label("NbDoc"))
                 .group_by(deliberation.c.NatureDocument)
                 .all()
             )
             nature_delib = (
-                session.query(deliberation.c.NatureDeliberation, func.count(deliberation.c.NatureDeliberation).label("NbDoc"))
+                db_session.query(deliberation.c.NatureDeliberation, func.count(deliberation.c.NatureDeliberation).label("NbDoc"))
                 .group_by(deliberation.c.NatureDeliberation)
                 .all()
-            )            
+            )
+            print(latest_delib)
+            # Convert query results to dictionaries
+            latest_delib_dicts = [dict(row) for row in latest_delib]
+            nature_doc_dicts = [dict(nature=nature, count=count) for nature, count in nature_doc]
+            nature_delib_dicts = [dict(nature=nature, count=count) for nature, count in nature_delib]
 
-        return render_template('index.html', nature_doc=nature_doc, nature_delib=nature_delib, latest_delib=latest_delib)
->>>>>>> 489ab7137fb0b7f5ab9b6b84f50023cdd6a4643e
-    
-    @app.route("/resultats/<int:IDDelib>", methods=['GET', 'POST'])
-    def get_article(IDDelib):
-        # global latest_delib
-        global article
+            # Store in session
+            session["latest_delib"] = latest_delib_dicts
+            session["nature_doc"] = nature_doc_dicts
+            session["nature_delib"] = nature_delib_dicts
+
+        return render_template('index.html', nature_doc=nature_doc_dicts, nature_delib=nature_delib_dicts, latest_delib=latest_delib_dicts)
+
+    @app.route("/Deliberation/<int:IDDelib>", methods=['GET', 'POST'])
+    def get_deliberation(IDDelib):
+        deliberation = None
         for delib in latest_delib:
             if delib.IDDelib == IDDelib:
-                article = delib
+                deliberation = delib
+                session["deliberation"] = deliberation
                 break
-
-        return render_template('search.html', article=article)
+        return render_template('deliberation.html', deliberation=deliberation)
     
-    @app.route("/resultats", methods=['POST', 'GET'])
+    @app.route("/Resultats", methods=['POST', 'GET'])
     def get_results():
         if request.method == 'POST':
             nature_doc = request.form.getlist('nature_doc_box')
@@ -135,10 +91,9 @@ with SSHTunnelForwarder(
             text_contains = request.form.get('text-contains')
             text_contains_not = request.form.get('text-contains-not')
 
-            with Session() as session:
-                global search_result
+            with Session() as db_session:
                 # Construct the query
-                query = session.query(deliberation)
+                query = db_session.query(deliberation)
 
                 # Add conditions for the nature of the document and the nature of the deliberation
                 if nature_doc:
@@ -164,8 +119,9 @@ with SSHTunnelForwarder(
 
                 # Execute the query and get the results
                 search_result = query.all()
+                session["search_result"] = search_result
 
-            return render_template('search.html',
+            return render_template('resultat_recherche.html',
                             nature_doc=nature_doc,
                             nature_delib=nature_delib,
                             from_date=from_date,
@@ -211,7 +167,6 @@ with SSHTunnelForwarder(
                                     error=error)
         return render_template('nous_contacter.html')
 
-
     def send_email(first_name, last_name, email, message):
         email_msg = f'Subject: ' \
                     f'Nouveau message - DataCNIL\n\n' \
@@ -224,17 +179,16 @@ with SSHTunnelForwarder(
             connection.login(user=OWN_EMAIL, password=OWN_PASSWORD)
             connection.sendmail(from_addr=email, to_addrs=OWN_EMAIL, msg=email_msg.encode('utf-8'))
 
-    @app.route("/statistiques")
-    def get_stats():
-        if article:
-            
+    @app.route("/stats_article")
+    def stats_deliberation():
+        deliberation = session.get("deliberation")
+        return render_template('stats_article.html', deliberation=deliberation)
 
-            return render_template('stats.html', article=article)
 
-        if search_result:
-            
-
-            return render_template('stats.html', search_result=search_result)
+    @app.route("/stats_")
+    def stats_search_query():
+        search_result = session.get("search_result")
+        return render_template('stats_recherche.html', search_result=search_result)
 
 
     if __name__ == '__main__':
