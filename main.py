@@ -79,7 +79,8 @@ with SSHTunnelForwarder(
         else:
             return redirect('/')
     
-    @app.route("/resultats", methods=['POST', 'GET'])
+    @app.route("/resultats_recherche", methods=['POST', 'GET'])
+    @cache.cached()
     def get_results():
         if request.method == 'POST':
             nature_doc = request.form.getlist('nature_doc_box')
@@ -179,15 +180,16 @@ with SSHTunnelForwarder(
             connection.login(user=OWN_EMAIL, password=OWN_PASSWORD)
             connection.sendmail(from_addr=email, to_addrs=OWN_EMAIL, msg=email_msg.encode('utf-8'))
 
-    @app.route("/stats_deliberation/<int:IDDelib>")
-    def stats_deliberation(IDDelib):
+    @app.route("/stats_deliberation")
+    def stats_deliberation():
         IDDelib = cache.get("IDDelib")
         return render_template('stats_deliberation.html', IDDelib=IDDelib)
 
 
     @app.route("/stats_recherche")
-    def stats_search_query():
-        return render_template('stats_recherche.html')
+    def stats_recherche():
+        search_result = cache.get("search_result")
+        return render_template('stats_recherche.html', search_result=search_result)
 
 
     if __name__ == '__main__':

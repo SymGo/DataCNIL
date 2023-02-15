@@ -13,7 +13,7 @@
 <div class="bottom-container">
   <div class="about-container">
     <a href="{{ url_for('index') }}"><button type="button" name="button" class="about-button">Page d'accueil</button></a>
-    <a href="{{ url_for('stats_search_query') }}"><button type="button" name="button" class="stats-button">Statistiques</button></a>
+    <a href="{{ url_for('stats_recherche') }}"><button type="button" name="button" class="stats-button">Statistiques</button></a>
     <hr class="hr-latest-results">
     <h1>Resultats de la rechreche</h1>
 
@@ -70,12 +70,9 @@
           {% for row in search_result: %}
           <h2>{{ row.Titre }}<span> — </span>
             <p class="results-p">
-              <a href="" class="a-tag">
+              <a href="{{ url_for('stats_recherche', IDDelib=row.IDDelib) }}" class="a-tag">
                 {{ row.TitreLong }}
               </a>
-            </p>
-            <p class="results-p">
-              {{ row.Contenu }}  
             </p>
           </h2>
           {% endfor %}
