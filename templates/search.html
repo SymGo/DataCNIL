@@ -64,6 +64,34 @@
 
 
     </div>
+
+    {% if article: %}
+    <div class="chosen_article">
+      <h3>{{ article['Titre'] }}</h3>
+      <p class="p-chosen-article">{{ article['TitreLong'] }}</p>
+      <p class="p-chosen-article">{{ article['Contenu'] }}</p>
+    </div>
+    {% endif %}
+    {% if search_result: %}
+    <div class="results-table-div">
+      <div class="latest-deliberations">
+        <article class="article">
+          {% for row in search_result: %}
+          <h2>{{ row.Titre }}<span> — </span>
+            <p class="results-p">
+              <a href="" class="a-tag">
+                {{ row.TitreLong }}
+              </a>
+            </p>
+            <p class="results-p">
+              {{ row.Contenu }}  
+            </p>
+          </h2>
+          {% endfor %}
+        </article>
+      </div>
+    </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}
