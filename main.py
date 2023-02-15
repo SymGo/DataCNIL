@@ -6,8 +6,7 @@ import smtplib
 import re
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
-from flask import jsonify
-
+from flask_caching import Cache
 
 # Constants for email and password
 OWN_EMAIL = 'marko.python.test@gmail.com'
@@ -16,6 +15,11 @@ OWN_PASSWORD = 'ykordwhlvmciffbw'
 # Create a Flask app instance
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'my_secret_key'
+
+cache = Cache(config={'CACHE_TYPE': 'simple'})
+
+# Initialize the cache with default settings
+cache.init_app(app)
 
 with SSHTunnelForwarder(
         ('i3l.univ-grenoble-alpes.fr', 22),
@@ -41,6 +45,7 @@ with SSHTunnelForwarder(
     
     # Route for the homepage
     @app.route("/", methods=['GET', 'POST'])
+    @cache.cached()
     def index():
         with Session() as db_session:
             latest_delib = (
@@ -56,30 +61,25 @@ with SSHTunnelForwarder(
                 .group_by(deliberation.c.NatureDeliberation)
                 .all()
             )
-            print(latest_delib)
-            # Convert query results to dictionaries
-            latest_delib_dicts = [dict(row) for row in latest_delib]
-            nature_doc_dicts = [dict(nature=nature, count=count) for nature, count in nature_doc]
-            nature_delib_dicts = [dict(nature=nature, count=count) for nature, count in nature_delib]
+            cache.set("latest_delib", latest_delib)
+            cache.set("nature_doc", nature_doc)
+            cache.set("nature_delib", nature_delib)
 
-            # Store in session
-            session["latest_delib"] = latest_delib_dicts
-            session["nature_doc"] = nature_doc_dicts
-            session["nature_delib"] = nature_delib_dicts
+        return render_template('index.html', nature_doc=nature_doc, nature_delib=nature_delib, latest_delib=latest_delib)
 
-        return render_template('index.html', nature_doc=nature_doc_dicts, nature_delib=nature_delib_dicts, latest_delib=latest_delib_dicts)
-
-    @app.route("/Deliberation/<int:IDDelib>", methods=['GET', 'POST'])
+    @app.route("/deliberation/<int:IDDelib>", methods=['GET', 'POST'])
+    @cache.cached()
     def get_deliberation(IDDelib):
-        deliberation = None
-        for delib in latest_delib:
-            if delib.IDDelib == IDDelib:
-                deliberation = delib
-                session["deliberation"] = deliberation
-                break
-        return render_template('deliberation.html', deliberation=deliberation)
+        cache.set("IDDelib", IDDelib)
+        latest_delib = cache.get("latest_delib")
+        if latest_delib is not None:
+            for delib in latest_delib:
+                if delib.IDDelib == IDDelib:
+                    return render_template('deliberation.html', deliberation=delib)
+        else:
+            return redirect('/')
     
-    @app.route("/Resultats", methods=['POST', 'GET'])
+    @app.route("/resultats", methods=['POST', 'GET'])
     def get_results():
         if request.method == 'POST':
             nature_doc = request.form.getlist('nature_doc_box')
@@ -119,7 +119,7 @@ with SSHTunnelForwarder(
 
                 # Execute the query and get the results
                 search_result = query.all()
-                session["search_result"] = search_result
+                cache.set("search_result", search_result)
 
             return render_template('resultat_recherche.html',
                             nature_doc=nature_doc,
@@ -179,16 +179,15 @@ with SSHTunnelForwarder(
             connection.login(user=OWN_EMAIL, password=OWN_PASSWORD)
             connection.sendmail(from_addr=email, to_addrs=OWN_EMAIL, msg=email_msg.encode('utf-8'))
 
-    @app.route("/stats_article")
-    def stats_deliberation():
-        deliberation = session.get("deliberation")
-        return render_template('stats_article.html', deliberation=deliberation)
+    @app.route("/stats_deliberation/<int:IDDelib>")
+    def stats_deliberation(IDDelib):
+        IDDelib = cache.get("IDDelib")
+        return render_template('stats_deliberation.html', IDDelib=IDDelib)
 
 
-    @app.route("/stats_")
+    @app.route("/stats_recherche")
     def stats_search_query():
-        search_result = session.get("search_result")
-        return render_template('stats_recherche.html', search_result=search_result)
+        return render_template('stats_recherche.html')
 
 
     if __name__ == '__main__':
