@@ -70,7 +70,7 @@
           {% for row in search_result: %}
           <h2>{{ row.Titre }}<span> — </span>
             <p class="results-p">
-              <a href="{{ url_for('stats_recherche', IDDelib=row.IDDelib) }}" class="a-tag">
+              <a href="{{ url_for('get_deliberation', IDDelib=row.IDDelib) }}" class="a-tag">
                 {{ row.TitreLong }}
               </a>
             </p>
