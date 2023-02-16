@@ -97,6 +97,10 @@
       <div class="statistical-information">
         <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="{{ url_for('static', filename='images/delib.html') }}"></iframe>
       </div>
+      <div>
+        <h3>Nuage de mots</h3>
+        <img style="width: 400px; height: 300px;" src="data:image/png;base64,{{ word_cloud_all }}" alt="Word Cloud">
+      </div>
 
       <h3>Avertissement</h3>
       <hr class="hr-latest-results">
