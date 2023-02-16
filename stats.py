@@ -40,36 +40,33 @@ def n_gram(text, data):
     years = [item[0] for item in data]
     counts = [item[1] for item in data]
 
-    # create the plot
-    fig = px.line(x=years, y=counts)
-    fig.update_traces(marker=dict(color='#6ca486'))
-    fig.update_layout(
-        xaxis_title="Année",
-        yaxis_title="Nombre de délibérations",
-        title="Nombre de délibérations par année",
-        showlegend=False,
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)'
+    # # create the plot
+    # fig = px.line(x=years, y=counts)
+    # fig.update_traces(marker=dict(color='#6ca486'))
+    # fig.update_layout(
+    #     xaxis_title="Année",
+    #     yaxis_title="Nombre de délibérations",
+    #     title="Nombre de délibérations par année",
+    #     showlegend=False,
+    #     paper_bgcolor='rgba(0,0,0,0)',
+    #     plot_bgcolor='rgba(0,0,0,0)'
+    # )
+
+    # create Plotly line chart
+    trace = px.line(
+        x=years,
+        y=counts
     )
 
-    # # create Plotly line chart
-    # trace = go.Scatter(
-    #     x=years,
-    #     y=counts,
-    #     mode='lines',
-    #     line=dict(color='rgb(31, 119, 180)'),
-    #     fill='tozeroy'
-    # )
+    # set layout of chart
+    layout = go.Layout(
+        title=text,
+        xaxis=dict(title='Année'),
+        yaxis=dict(title='Fréquence mot')
+    )
 
-    # # set layout of chart
-    # layout = go.Layout(
-    #     title=text,
-    #     xaxis=dict(title='Année'),
-    #     yaxis=dict(title='Fréquence mot')
-    # )
-
-    # # create figure
-    # fig = go.Figure(data=[trace], layout=layout)
+    # create figure
+    fig = go.Figure(data=[trace], layout=layout)
 
     # save the plot to a file
     fig.write_html('static/images/ngram.html')
