@@ -14,7 +14,24 @@
     <a href="{{ url_for('get_results') }}"><button type="button" name="button" class="about-button">Retourner</button></a>
     <hr class="hr-latest-results">
     <h1>Statistiques pour la recherche</h1>
-    <h3></h3>
+    <div>
+      <h3>Les mots les plus fréquents</h3>
+      {% for key, value in word_freq: %}
+      <div> {{ key }} : {{ value }} </div>
+      {% endfor %}
+    </div>
+    <div>
+      <h3>Nuage de mots</h3>
+      <img style="width: 400px; height: 300px;" src="data:image/png;base64,{{ word_cloud }}" alt="Word Cloud">
+    </div>
+    <form method="POST" action="{{ url_for('get_ngram') }}">
+      <label for="text"></label>
+      <input type="text" id="text" name="text" value="">
+      <button type="submit">Générer</button>
+    </form>
+    <div class="statistical-information">
+      <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="{{ url_for('static', filename='images/ngram.html') }}"></iframe>
+    </div>
 
   </div>
 </div>

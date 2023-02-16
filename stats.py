@@ -38,7 +38,9 @@ def bar_chart(data):
 def n_gram(text, data):
     # create x and y data from input data
     years = [item[0] for item in data]
-    counts = [item[1] for item in data]
+    counts = [int(item[1]) for item in data]
+    print(years)
+    print(counts)
 
     # # create the plot
     # fig = px.line(x=years, y=counts)
@@ -53,9 +55,12 @@ def n_gram(text, data):
     # )
 
     # create Plotly line chart
-    trace = px.line(
+    trace = go.Scatter(
         x=years,
-        y=counts
+        y=counts,
+        mode='lines',
+        line=dict(color='rgb(31, 119, 180)'),
+        fill='tozeroy'
     )
 
     # set layout of chart

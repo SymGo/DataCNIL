@@ -226,7 +226,7 @@ with SSHTunnelForwarder(
 
         return render_template('stats_deliberation.html', IDDelib=IDDelib, word_freq=word_freq, word_cloud=word_cloud)
     
-    @app.route("/get_ngram", methods=['GET', 'POST'])
+    @app.route("/get_ngram", methods=['POST'])
     def get_ngram():
         IDDelib = cache.get("IDDelib")
 
@@ -234,14 +234,17 @@ with SSHTunnelForwarder(
             text = request.form.get('text')
             print("Mot pour ngram",text)
             with Session() as db_session:
-                ngram = db_session.query(
-                            func.year(deliberation.c.DateTexte).label('AnneeTexte'), 
-                            func.sum(token2deliberation.c.NbOcc).label("NbOcc"))\
-                            .join(token2deliberation, deliberation.c.IDDelib == token2deliberation.c.IDDelib)\
-                            .join(token, token.c.IDToken == token2deliberation.c.IDToken)\
-                            .filter(token.c.Token == text)\
-                            .group_by(func.year(deliberation.c.DateTexte))\
-                            .order_by(func.year(deliberation.c.DateTexte)).all()
+                ngram = (
+                    db_session.query(
+                        func.year(deliberation.c.DateTexte).label('AnneeTexte'), 
+                        func.sum(token2deliberation.c.NbOcc).label("NbOcc"))
+                        .join(token2deliberation, deliberation.c.IDDelib == token2deliberation.c.IDDelib)
+                        .join(token, token.c.IDToken == token2deliberation.c.IDToken)
+                        .filter(token.c.Token == text)
+                        .group_by(func.year(deliberation.c.DateTexte))
+                        .order_by(func.year(deliberation.c.DateTexte))
+                        .all()
+            )
                 
                 print("requete sql pour ngram: ",ngram)    
                 stats.n_gram(text, ngram)
@@ -251,7 +254,24 @@ with SSHTunnelForwarder(
     @app.route("/stats_recherche")
     def stats_recherche():
         search_result = cache.get("search_result")
-        return render_template('stats_recherche.html', search_result=search_result)
+        result_list = []
+        with Session() as db_session:
+            for deliberation in search_result:
+                result = (
+                    db_session.query(token.c.Token, token2deliberation.c.NbOcc)
+                        .join(token2deliberation, token.c.IDToken == token2deliberation.c.IDToken)
+                        .filter(token2deliberation.c.IDDelib == deliberation.IDDelib)
+                        .order_by(token2deliberation.c.NbOcc.desc()).all()
+                )
+                result_list.extend(result)
+
+        result_tuples = [(word, count) for word, count in result_list]
+        print(result_tuple)
+
+        word_freq = stats.word_frequency(result_tuples)
+        word_cloud = stats.generate_wordcloud(result_tuples)
+
+        return render_template('stats_recherche.html', search_result=search_result, word_freq=word_freq,word_cloud=word_cloud)
 
 
     if __name__ == '__main__':
