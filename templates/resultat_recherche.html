@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="top-container">
-  <a href="{{ url_for('index') }}"><img src="static/logo/logo-transparent-png.png" alt="" class="logo-image"></a>
+  <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='logo/logo-transparent-png.png') }}" alt="" class="logo-image"></a>
   <div class="buttons-div">
     <a href="{{ url_for('get_about') }}"><button class="upper-button" type="button" name="button">A propos</button></a>
     <a href="{{ url_for('get_contact') }}"><button type="button" name="button">Nous contacter</button></a>
@@ -18,54 +18,50 @@
     <h1>Resultats de la rechreche</h1>
 
     <div class="chosen_values">
-      {% if nature_doc: %}
+      {% if nature_doc %}
       <h4>Nature document :</h4>
-      {% for item in nature_doc: %}
-      <p class="p-chosen-values">{{ item }}</p>
-      {% endfor %}
+      <p class="p-chosen-values">{{ nature_doc|join(", ") }}</p>
       {% endif %}
 
-      {% if nature_delib: %}
+      {% if nature_delib %}
       <h4>Nature de la déliberation :</h4>
-      {% for item in nature_delib: %}
-      <p class="p-chosen-values">{{ item }}</p>
-      {% endfor %}
+      <p class="p-chosen-values">{{ nature_delib|join(", ") }}</p>
       {% endif %}
 
-      {% if from_date: %}
+      {% if from_date %}
       <h4>De :</h4>
       <p class="p-chosen-values">{{ from_date }}</p>
       {% endif %}
 
-      {% if to_date: %}
+      {% if to_date %}
       <h4>à :</h4>
-      <p class="p-chosen-values"> {{ to_date }}</p>
+      <p class="p-chosen-values">{{ to_date }}</p>
       {% endif %}
 
-      {% if title_contains: %}
+      {% if title_contains %}
       <h4>Le titre contient :</h4>
       <p class="p-chosen-values">{{ title_contains }}</p>
       {% endif %}
 
-      {% if title_contains_not: %}
+      {% if title_contains_not %}
       <h4>Le titre ne contient pas :</h4>
       <p class="p-chosen-values">{{ title_contains_not }}</p>
       {% endif %}
 
-      {% if text_contains: %}
+      {% if text_contains %}
       <h4>Le text contient :</h4>
       <p class="p-chosen-values">{{ text_contains }}</p>
       {% endif %}
 
-      {% if text_contains_not: %}
+      {% if text_contains_not %}
       <h4>et ce qui ne contient pas :</h4>
       <p class="p-chosen-values">{{ text_contains_not }}</p>
       {% endif %}
-
     </div>
 
     <div class="results-table-div">
       <div class="latest-deliberations">
+        {% if search_result %}
         <article class="article">
           {% for row in search_result: %}
           <h2>{{ row.Titre }}<span> — </span>
@@ -77,6 +73,9 @@
           </h2>
           {% endfor %}
         </article>
+        {% else %}
+        <p class="results-p">Aucun champ ne correspond à votre recherche.</p>
+        {% endif %}
       </div>
     </div>
   </div>

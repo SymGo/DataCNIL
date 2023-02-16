@@ -2,7 +2,7 @@
 {% block title %}Informations statistiques{% endblock %}
 {% block content %}
 <div class="top-container">
-  <a href="{{ url_for('index') }}"><img src="static/logo/logo-transparent-png.png" alt="" class="logo-image"></a>
+  <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='logo/logo-transparent-png.png') }}" alt="" class="logo-image"></a>
   <div class="buttons-div">
     <a href="{{ url_for('get_about') }}"><button class="upper-button" type="button" name="button">A propos</button></a>
     <a href="{{ url_for('get_contact') }}"><button type="button" name="button">Nous contacter</button></a>
@@ -11,7 +11,7 @@
 
 <div class="bottom-container">
   <div class="about-container">
-    <a href="{{ url_for('get_results') }}"><button type="button" name="button" class="about-button">Résultats de recherche</button></a>
+    <a href="{{ url_for('get_results') }}"><button type="button" name="button" class="about-button">Retourner</button></a>
     <hr class="hr-latest-results">
     <h1>Statistiques pour la recherche</h1>
     <h3></h3>

@@ -2,7 +2,7 @@
 {% block title %}Analyseur DataCNIL{% endblock %}
 {% block content %}
 <div class="top-container">
-  <img src="static/logo/logo-transparent-png.png" alt="" class="logo-image">
+  <img src="{{ url_for('static', filename='logo/logo-transparent-png.png') }}" alt="" class="logo-image">
   <div class="buttons-div">
     <a href="{{ url_for('get_about') }}"><button class="upper-button" type="button" name="button">A propos</button></a>
     <a href="{{ url_for('get_contact') }}"><button type="button" name="button">Nous contacter</button></a>
@@ -16,11 +16,9 @@
     <form method="POST" action="{{ url_for('get_results') }}">
       <div class="nature-doc">
         <label>Nature du document</label>
-          <div class="checkbox">
-            {% for row in nature_doc: %}
-            <input type="checkbox" name="nature_doc_box" id="doc_1" value="{{ row.NatureDocument }}"><label for="doc_1">{{ row.NatureDocument }}</label>
-            {% endfor %}
-          </div>
+          {% for row in nature_doc: %}
+          <input style="display: inline-flex" type="checkbox" name="nature_doc_box" id="{{ row.NatureDocument }}" value="{{ row.NatureDocument }}"><label style="display: inline-flex" for="{{ row.NatureDocument }}">{{ row.NatureDocument }}</label><br>
+          {% endfor %}
       </div>
 
       <div class="nature-delib">
@@ -33,7 +31,8 @@
           <ul class="dropdown-menu">
             {% for row in nature_delib: %}
             <li class="dropdown-option">
-              <input type="checkbox" name="nature_delib_box" id="delib_1" value="{{ row.NatureDeliberation }}"><label for="delib_1">{{ row.NatureDeliberation }}</label>
+              <input type="checkbox" name="nature_delib_box" id="{{ row.NatureDeliberation }}" value="{{ row.NatureDeliberation }}">
+              <label class="dropdown-label" for="{{ row.NatureDeliberation }}">{{ row.NatureDeliberation }}</label>
             </li>            
             {% endfor %}
           </ul>
@@ -95,15 +94,13 @@
 
       <h3>Informations statistiques</h3>
       <hr class="hr-latest-results">
-
       <div class="statistical-information">
         <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="{{ url_for('static', filename='images/delib.html') }}"></iframe>
       </div>
 
       <h3>Avertissement</h3>
       <hr class="hr-latest-results">
-
-      <div class="statistical-information">
+      <div class="extra-information">
 
 
       </div>

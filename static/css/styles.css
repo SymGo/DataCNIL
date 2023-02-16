@@ -103,12 +103,29 @@ label {
     border-radius: 5px;
     background-color: #F5FAF7;
     margin: 0 30px;
+    padding: 0 5px 10px 10px;
+}
+
+.chosen-article {
+    margin: 0 30px;
+    padding: 10px 0;
+    height: 450px;
+    background-color: #F5FAF7;
+    border-radius: 5px;
 }
 
 .p-chosen-values {
     font-family: "Montserrat";
     color: #0f6336;
-    display: inline-flex;
+    display: inline;
+    white-space: normal;
+}
+
+.p-chosen-article {
+    font-family: "Montserrat";
+    color: #0f6336;
+    padding: 0 25px;
+    overflow-y: auto;
 }
 
 hr {
@@ -133,18 +150,23 @@ hr {
 }
 
 .latest-deliberations {
+  margin-top: 10px;
   width: 100%;
-  height: 460px;
+  height: 100%;
   background-color: #F5FAF7;
   border-radius: 5px;
   overflow-y: scroll;
 }
 
-.statistical-information {
+.statistical-information, .extra-information {
   width: 100%;
   height: 350px;
   background-color: #F5FAF7;
   border-radius: 5px;
+}
+
+.extra-information {
+    height: 450px;
 }
 
 .hr-latest-results {
@@ -154,10 +176,11 @@ hr {
 .results-table-div {
   position: relative;
   margin: auto;
-  /*background-color: #a5bfe8;*/
-  height: 93%;
+  height: 65%;
+  max-height: 350px;
   width: 95%;
   border-radius: 5px 5px;
+
 }
 
 .results-p {
@@ -321,11 +344,13 @@ button:disabled {
   border: 1px solid #ccc;
   padding: 10px;
   z-index: 1;
+  overflow-y: scroll;
 }
 
 .dropdown-option {
   display: flex;
   padding: 2px 0;
+  font-size: 14px;
 }
 
 .dropdown-option input[type="checkbox"] {
@@ -335,6 +360,14 @@ button:disabled {
 .dropdown-container:hover .dropdown-menu,
 .dropdown-container:focus .dropdown-menu {
   display: block;
+}
+
+.dropdown-label {
+    max-width: 200px;
+    max-height: 50px;
+    display: inline-block;
+    overflow-y: auto;
+    word-wrap: break-word;
 }
 
 .error {

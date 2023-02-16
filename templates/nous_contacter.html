@@ -2,7 +2,7 @@
 {% block title %}Nous contacter{% endblock %}
 {% block content %}
 <div class="top-container">
-  <a href="{{ url_for('index') }}"><img src="static/logo/logo-transparent-png.png" alt="" class="logo-image"></a>
+  <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='logo/logo-transparent-png.png') }}" alt="" class="logo-image"></a>
   <div class="buttons-div" id="contact-button">
     <a href="{{ url_for('get_about') }}"><button type="button" name="button">À propos</button></a>
   </div>
