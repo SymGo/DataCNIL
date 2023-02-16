@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, url_for
+from flask import Flask, render_template, request, url_for, redirect
 from sshtunnel import SSHTunnelForwarder
 import matplotlib
 matplotlib.use('Agg')
@@ -7,6 +7,7 @@ import re
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
 from flask_caching import Cache
+import plotly.express as px
 
 # Constants for email and password
 OWN_EMAIL = 'marko.python.test@gmail.com'
@@ -61,6 +62,33 @@ with SSHTunnelForwarder(
                 .group_by(deliberation.c.NatureDeliberation)
                 .all()
             )
+            bar_chart = (
+                db_session.query(func.year(deliberation.c.DateTexte).label("Année"),
+                              func.count(deliberation.c.IDDelib).label("Nombre_de_délibérations"))
+                    .group_by(func.year(deliberation.c.DateTexte))
+                    .order_by(func.year(deliberation.c.DateTexte).asc())
+                    .all()
+            )
+
+            # extract the data from the query results
+            annees = [result[0] for result in bar_chart]
+            nb_delibs = [result[1] for result in bar_chart]
+
+            # create the plot
+            fig = px.bar(x=annees, y=nb_delibs)
+            fig.update_traces(marker=dict(color='#6ca486'))
+            fig.update_layout(
+                xaxis_title="Année",
+                yaxis_title="Nombre de délibérations",
+                title="Nombre de délibérations par année",
+                showlegend=False,
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)'
+            )
+
+            # save the plot to a file
+            fig.write_html('static/images/delib.html')
+
             cache.set("latest_delib", latest_delib)
             cache.set("nature_doc", nature_doc)
             cache.set("nature_delib", nature_delib)
@@ -72,12 +100,22 @@ with SSHTunnelForwarder(
     def get_deliberation(IDDelib):
         cache.set("IDDelib", IDDelib)
         latest_delib = cache.get("latest_delib")
+        search_result = cache.get("search_result")
         if latest_delib is not None:
             for delib in latest_delib:
                 if delib.IDDelib == IDDelib:
-                    return render_template('deliberation.html', deliberation=delib)
+                    deliberation=delib
+                    break
+        elif search_result is not None:
+            for delib in search_result:
+                if delib.IDDelib == IDDelib:
+                    deliberation=delib
+                    break
         else:
-            return redirect('/')
+            return render_template('index.html')
+
+        return render_template('deliberation.html', deliberation=delib)
+
     
     @app.route("/resultats_recherche", methods=['POST', 'GET'])
     @cache.cached()
