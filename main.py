@@ -5,9 +5,9 @@ matplotlib.use('Agg')
 import smtplib
 import re
 from sqlalchemy import *
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, joinedload
 from flask_caching import Cache
-import plotly.express as px
+import stats
 
 # Constants for email and password
 OWN_EMAIL = 'marko.python.test@gmail.com'
@@ -70,24 +70,7 @@ with SSHTunnelForwarder(
                     .all()
             )
 
-            # extract the data from the query results
-            annees = [result[0] for result in bar_chart]
-            nb_delibs = [result[1] for result in bar_chart]
-
-            # create the plot
-            fig = px.bar(x=annees, y=nb_delibs)
-            fig.update_traces(marker=dict(color='#6ca486'))
-            fig.update_layout(
-                xaxis_title="Année",
-                yaxis_title="Nombre de délibérations",
-                title="Nombre de délibérations par année",
-                showlegend=False,
-                paper_bgcolor='rgba(0,0,0,0)',
-                plot_bgcolor='rgba(0,0,0,0)'
-            )
-
-            # save the plot to a file
-            fig.write_html('static/images/delib.html')
+            stats.bar_chart(bar_chart)
 
             cache.set("latest_delib", latest_delib)
             cache.set("nature_doc", nature_doc)
@@ -114,7 +97,8 @@ with SSHTunnelForwarder(
         else:
             return render_template('index.html')
 
-        return render_template('deliberation.html', deliberation=delib)
+        cache.set("deliberation", deliberation)
+        return render_template('deliberation.html', deliberation=deliberation)
 
     
     @app.route("/resultats_recherche", methods=['POST', 'GET'])
@@ -218,11 +202,42 @@ with SSHTunnelForwarder(
             connection.login(user=OWN_EMAIL, password=OWN_PASSWORD)
             connection.sendmail(from_addr=email, to_addrs=OWN_EMAIL, msg=email_msg.encode('utf-8'))
 
-    @app.route("/stats_deliberation")
+    @app.route("/stats_deliberation", methods=['GET', 'POST'])
     def stats_deliberation():
         IDDelib = cache.get("IDDelib")
-        return render_template('stats_deliberation.html', IDDelib=IDDelib)
 
+        with Session() as db_session:
+            result = db_session.query(token.c.Token, token2deliberation.c.NbOcc)\
+                    .join(token2deliberation, token.c.IDToken == token2deliberation.c.IDToken)\
+                    .filter(token2deliberation.c.IDDelib == IDDelib)\
+                    .order_by(token2deliberation.c.NbOcc.desc()).all()
+        
+        word_freq = stats.word_frequency(result)
+        word_cloud = stats.generate_wordcloud(result)
+
+        return render_template('stats_deliberation.html', IDDelib=IDDelib, word_freq=word_freq, word_cloud=word_cloud)
+    
+    @app.route("/get_ngram", methods=['GET', 'POST'])
+    def get_ngram():
+        IDDelib = cache.get("IDDelib")
+
+        if request.method == 'POST':
+            text = request.form.get('text')
+            print("Mot pour ngram",text)
+            with Session() as db_session:
+                ngram = db_session.query(
+                            func.year(deliberation.c.DateTexte).label('AnneeTexte'), 
+                            func.sum(token2deliberation.c.NbOcc).label("NbOcc"))\
+                            .join(token2deliberation, deliberation.c.IDDelib == token2deliberation.c.IDDelib)\
+                            .join(token, token.c.IDToken == token2deliberation.c.IDToken)\
+                            .filter(token.c.Token == text)\
+                            .group_by(func.year(deliberation.c.DateTexte))\
+                            .order_by(func.year(deliberation.c.DateTexte)).all()
+                
+                print("requete sql pour ngram: ",ngram)    
+                stats.n_gram(text, ngram)
+        
+        return render_template('stats_deliberation.html', IDDelib=IDDelib)
 
     @app.route("/stats_recherche")
     def stats_recherche():
