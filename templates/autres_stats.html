@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}À propos{% endblock %}
+{%block content %}
+<div class="top-container">
+  <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='logo/logo-transparent-png.png') }}" alt="" class="logo-image"></a>
+  <div class="buttons-div">
+    <a href="{{ url_for('get_about') }}"><button class="upper-button" type="button" name="button">À propos</button></a>
+    <a href="{{ url_for('get_contact') }}"><button type="button" name="button">Nous contacter</button></a>
+  </div>
+
+</div>
+
+<div class="bottom-container">
+  <div class="about-container">
+    <a href="{{ url_for('index') }}"><button type="button" name="button" class="about-button">Page d'accueil</button></a>
+    <hr class="hr-latest-results">
+    <form method="POST" action="">
+      <div style="margin: 0 30px; display: inline-flex;">
+        <input style="width: 195px; margin-right: 10px;" type="text" name="concordance-ngram">
+        <div class="other-search-button">
+          <input type="submit" value="Recherche" id="smaller-button">
+        </div>
+      </div>
+    </form>
+    <h3>Concordancier</h3>
+    <hr class="hr-latest-results">
+    <div class="concordance-table">
+    <table>
+      <tr>
+        <td>ID</td>
+        <td>Date</td>
+        <td>Texte gauche</td>
+        <td>mot</td>
+        <td>Texte droit</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+    </div>
+    <h3>Chronogramme de mots</h3>
+    <hr class="hr-latest-results">
+  </div>
+</div>
+{% endblock %}
+

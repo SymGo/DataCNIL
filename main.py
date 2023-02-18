@@ -9,6 +9,7 @@ from sqlalchemy.orm import sessionmaker, joinedload
 from flask_caching import Cache
 import stats
 
+
 # Constants for email and password
 OWN_EMAIL = 'marko.python.test@gmail.com'
 OWN_PASSWORD = 'ykordwhlvmciffbw'
@@ -295,10 +296,10 @@ with SSHTunnelForwarder(
 
         return render_template('stats_recherche.html', word_freq=word_freq, word_cloud=word_cloud)
 
+    @app.route("/concordance_et_chronogram")
+    def autres_stats():
+        return render_template('autres_stats.html')
+
 
     if __name__ == '__main__':
         app.run(debug=True)
-
-
-
-

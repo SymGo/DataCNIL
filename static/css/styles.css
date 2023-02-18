@@ -222,10 +222,10 @@ hr {
   margin: 15px 0 15px 30px;
 }
 
-.stats-button {
+.stats-button, .autre-stats-button {
   position: absolute;
   top: 15px;
-  right: 30px;
+  right: 25px;
 }
 
 #contact-button {
@@ -253,7 +253,46 @@ textarea {
   height: 160px;
 }
 
-button, .message-submit, .search-button input[type="submit"] {
+.single-delib-stats {
+    background-color: #F5FAF7;
+    margin: 0 auto;
+    display: flex;
+    width: 91%;
+    position: relative;
+    padding: 5px 25px;
+    border-radius: 5px;
+    height: 450px;
+    overflow-y: scroll;
+}
+
+.single-delib-most-freq {
+    font-family: 'Montserrat';
+    color: #0f6336;
+    margin: 0;
+    margin-top: 3px;
+}
+
+.word-cloud {
+    position: absolute;
+    right: 0;
+    margin-right: 15px;
+}
+
+.word-cloud-img {
+    width: 550px;
+    height: 350px;
+    display: block;
+    margin: auto;
+}
+
+.ngram-div {
+    position: absolute;
+    top: 450px;
+    width: 95%;
+    margin: 0 15px;
+}
+
+button, .message-submit, .search-button input[type="submit"], .other-search-button input[type="submit"] {
   background-color: #FFFFFF;
   border: 1px solid #222222;
   border-radius: 5px;
@@ -297,6 +336,14 @@ button:disabled {
   opacity: 1;
 }
 
+#smaller-button {
+    width: 180px;
+    max-width: 180px;
+    padding: 6px 13px;
+    font-size: 14px;
+    line-height: 12px;
+}
+
 .checkbox {
   display: flex;
 }
@@ -304,6 +351,15 @@ button:disabled {
 .nature-delib {
   position: relative;
   display: inline-block;
+}
+
+.concordance-table {
+    font-family: 'Montserrat';
+    position: relative;
+    display: inline-flex;
+    margin: 0 auto;
+    width: 100%;
+    justify-content: center;
 }
 
 .dropdown-container {
