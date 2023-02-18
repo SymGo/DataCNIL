@@ -231,8 +231,29 @@ with SSHTunnelForwarder(
             connection.login(user=OWN_EMAIL, password=OWN_PASSWORD)
             connection.sendmail(from_addr=email, to_addrs=OWN_EMAIL, msg=email_msg.encode('utf-8'))
 
-    @app.route("/concordance_et_chronogram")
+    @app.route("/concordance_et_chronogram", methods=['POST', 'GET'])
     def autres_stats():
+        if request.method == 'POST':
+            text = request.form.get('concordance-ngram')
+            print(text)
+
+            with Session() as db_session:
+                concordance_query = (
+                    db_session.query(deliberation.c.Contenu.like(f"%{text}%"))
+                )
+                ngram_query = (
+                    db_session.query(deliberation.c.DateTexte, func.sum(token2deliberation.c.NbOcc))
+                        .join(token2deliberation, deliberation.c.IDDelib == token2deliberation.c.IDDelib)
+                        .join(token, token.c.IDToken == token2deliberation.c.IDToken)
+                        .filter(token.c.Token == text)
+                        .group_by(deliberation.c.DateTexte)
+                        .order_by(deliberation.c.DateTexte)
+                        .all()
+                )   
+                print(concordance_query)
+
+            stats.n_gram(ngram_query, text)
+
         return render_template('autres_stats.html')
 
 

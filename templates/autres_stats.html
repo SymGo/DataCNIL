@@ -14,7 +14,7 @@
   <div class="about-container">
     <a href="{{ url_for('index') }}"><button type="button" name="button" class="about-button">Page d'accueil</button></a>
     <hr class="hr-latest-results">
-    <form method="POST" action="">
+    <form method="POST" action=" {{ url_for('autres_stats') }}">
       <div style="margin: 0 30px; display: inline-flex;">
         <input style="width: 195px; margin-right: 10px;" type="text" name="concordance-ngram">
         <div class="other-search-button">
@@ -44,6 +44,9 @@
     </div>
     <h3>Chronogramme de mots</h3>
     <hr class="hr-latest-results">
+    <div class="statistical-information">
+      <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="{{ url_for('static', filename='images/ngram.html') }}"></iframe>
+    </div>
   </div>
 </div>
 {% endblock %}
