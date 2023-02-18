@@ -84,7 +84,7 @@ def word_frequency(query):
 
 def generate_wordcloud(word_freq):
     # create a dictionary mapping each word to its frequency
-    word_freq = {word: freq for word, freq in word_freq if not word in stop_words}
+    word_freq = {word: int(freq) for word, freq in word_freq if not word in stop_words}
 
     # generate word cloud
     wordcloud = WordCloud(background_color="#F5FAF7", font_path="static/fonts/Montserrat-Regular.ttf",

@@ -51,7 +51,7 @@ with SSHTunnelForwarder(
     def index():
         with Session() as db_session:
             latest_delib = (
-                db_session.query(deliberation.c).order_by(desc(deliberation.c.DateTexte)).limit(10).all()
+                db_session.query(deliberation.c).order_by(desc(deliberation.c.DateTexte)).limit(20).all()
             ) 
             nature_doc = (
                 db_session.query(deliberation.c.NatureDocument, func.count(deliberation.c.NatureDocument).label("NbDoc"))
@@ -70,14 +70,22 @@ with SSHTunnelForwarder(
                     .order_by(func.year(deliberation.c.DateTexte).asc())
                     .all()
             )
+            global_wordcloud = (
+                db_session.query(token.c.Token, func.sum(token2deliberation.c.NbOcc))
+                    .join(token2deliberation, token.c.IDToken == token2deliberation.c.IDToken)
+                    .group_by(token.c.Token)
+                    .order_by(token2deliberation.c.NbOcc.desc())
+                    .all()
+            )
 
+            word_cloud_all = stats.generate_wordcloud(global_wordcloud)
             stats.bar_chart(bar_chart)
 
             cache.set("latest_delib", latest_delib)
             cache.set("nature_doc", nature_doc)
             cache.set("nature_delib", nature_delib)
 
-        return render_template('index.html', nature_doc=nature_doc, nature_delib=nature_delib, latest_delib=latest_delib)
+        return render_template('index.html', nature_doc=nature_doc, nature_delib=nature_delib, latest_delib=latest_delib, word_cloud_all=word_cloud_all)
 
     @app.route("/deliberation/<int:IDDelib>", methods=['GET', 'POST'])
     @cache.cached()
@@ -207,10 +215,12 @@ with SSHTunnelForwarder(
         IDDelib = cache.get("IDDelib")
 
         with Session() as db_session:
-            result = db_session.query(token.c.Token, token2deliberation.c.NbOcc)\
-                    .join(token2deliberation, token.c.IDToken == token2deliberation.c.IDToken)\
-                    .filter(token2deliberation.c.IDDelib == IDDelib)\
+            result = (
+                db_session.query(token.c.Token, token2deliberation.c.NbOcc)
+                    .join(token2deliberation, token.c.IDToken == token2deliberation.c.IDToken)
+                    .filter(token2deliberation.c.IDDelib == IDDelib)
                     .order_by(token2deliberation.c.NbOcc.desc()).all()
+            )
         
         word_freq = stats.word_frequency(result)
         word_cloud = stats.generate_wordcloud(result)
