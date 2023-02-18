@@ -13,7 +13,6 @@
 <div class="bottom-container">
   <div class="about-container">
     <a href="{{ url_for('index') }}"><button type="button" name="button" class="about-button">Page d'accueil</button></a>
-    <a href="{{ url_for('stats_deliberation') }}"><button type="button" name="button" class="stats-button">Statistiques</button></a>
     <hr class="hr-latest-results">
     <h1>Resultat</h1>
 
@@ -22,7 +21,38 @@
       <p class="p-chosen-article">{{ deliberation['TitreLong'] }}</p>
       <p class="p-chosen-article">{{ deliberation['Contenu'] }}</p>
     </div>
+  </div>
+</div>
 
+<div class="bottom-container">
+  <div class="about-container">
+    <hr class="hr-latest-results">
+    <h1>Statistiques pour une seule délibération</h1>
+    <div class="single-delib-stats">
+      <div>
+        <h3>Les mots les plus fréquents</h3>
+        <table>
+          <tr>
+            <td>Mot</td>
+            <td>POS</td>
+            <td>Lemme</td>
+            <td>Fréquence</td>
+          </tr>
+          {% for key, value in word_freq: %}
+          <tr>
+            <td>{{ key }}</td>
+            <td>{{ value["pos"] }}</td>
+            <td>{{ value["lemma"] }}</td>
+            <td>{{ value["freq"] }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+      <div class="word-cloud">
+        <h3>Nuage de mots</h3>
+        <img class="word-cloud-img" src="data:image/png;base64,{{ word_cloud }}" alt="Word Cloud">
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}
