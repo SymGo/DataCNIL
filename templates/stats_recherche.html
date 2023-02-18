@@ -24,7 +24,7 @@
       <h3>Nuage de mots</h3>
       <img style="width: 400px; height: 300px;" src="data:image/png;base64,{{ word_cloud }}" alt="Word Cloud">
     </div>
-    <form method="POST" action="{{ url_for('get_ngram') }}">
+    <form method="POST" action="{{ url_for('stats_recherche') }}">
       <label for="text"></label>
       <input type="text" id="text" name="text" value="">
       <button type="submit">Générer</button>

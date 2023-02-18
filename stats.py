@@ -35,24 +35,12 @@ def bar_chart(data):
     fig.write_html('static/images/delib.html')
     return 0
 
-def n_gram(text, data):
+def n_gram(data, text="cnil"):
     # create x and y data from input data
     years = [item[0] for item in data]
     counts = [int(item[1]) for item in data]
     print(years)
     print(counts)
-
-    # # create the plot
-    # fig = px.line(x=years, y=counts)
-    # fig.update_traces(marker=dict(color='#6ca486'))
-    # fig.update_layout(
-    #     xaxis_title="Année",
-    #     yaxis_title="Nombre de délibérations",
-    #     title="Nombre de délibérations par année",
-    #     showlegend=False,
-    #     paper_bgcolor='rgba(0,0,0,0)',
-    #     plot_bgcolor='rgba(0,0,0,0)'
-    # )
 
     # create Plotly line chart
     trace = go.Scatter(
