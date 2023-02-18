@@ -10,17 +10,26 @@
   </div>
 </div>
 
-<div class="bottom-container">
-  <div class="about-container">
+<div class="bottom-container-page-delib">
+  <div class="delib-container">
     <a href="{{ url_for('index') }}"><button type="button" name="button" class="about-button">Page d'accueil</button></a>
     <a href="{{ url_for('stats_deliberation') }}"><button type="button" name="button" class="stats-button">Statistiques</button></a>
     <hr class="hr-latest-results">
     <h1>Resultat</h1>
 
     <div class="chosen-article">
+      <h3>{{ deliberation['IDCNIL'] }}</h3>
       <h3>{{ deliberation['Titre'] }}</h3>
-      <p class="p-chosen-article">{{ deliberation['TitreLong'] }}</p>
-      <p class="p-chosen-article">{{ deliberation['Contenu'] }}</p>
+      <p class="p-chosen-article"><span class="bold-text">Titre long : </span>{{ deliberation['TitreLong'] }}</p>
+      <p class="p-chosen-article"><span class="bold-text">Nature document : </span>{{ deliberation['NatureDocument'] }}</p>
+      <p class="p-chosen-article"><span class="bold-text">Numéro : </span>{{ deliberation['Numero'] }}</p>
+      <p class="p-chosen-article"><span class="bold-text">Nature délibération : </span>{{ deliberation['NatureDeliberation'] }}</p>
+      <p class="p-chosen-article"><span class="bold-text">Date du texte : </span>{{ deliberation['DateTexte'] }}</p>
+      <p class="p-chosen-article"><span class="bold-text">Date de publication : </span>{{ deliberation['DatePublication'] }}</p>
+      <p class="p-chosen-article"><span class="bold-text">Etat juridique : </span>{{ deliberation['EtatJuridique'] }}</p>
+      <div class="chosen-article-content">
+        <p class="p-chosen-article">{{ deliberation['Contenu'] }}</p>
+      </div>
     </div>
 
   </div>

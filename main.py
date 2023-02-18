@@ -93,20 +93,16 @@ with SSHTunnelForwarder(
 
         if latest_delib is not None:
             for delib in latest_delib:
-                print("in lates_delib for loop")
                 if delib.IDDelib == IDDelib:
                     deliberation=delib
-                    print("in latest delib if block. deliberation is: ", deliberation)
                     return render_template('deliberation.html', deliberation=deliberation)
                 
         if search_result is not None:
             for delib in search_result:
-                print("in search_result for loop")
 
                 if delib.IDDelib == IDDelib:
                     deliberation=delib
-                    print("in search_result if block. deliberation is: ", deliberation)
-                    
+
                     return render_template('deliberation.html', deliberation=deliberation)
 
         cache.set("deliberation", deliberation)
