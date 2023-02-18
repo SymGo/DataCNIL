@@ -5,7 +5,7 @@ matplotlib.use('Agg')
 import smtplib
 import re
 from sqlalchemy import *
-from sqlalchemy.orm import sessionmaker, joinedload
+from sqlalchemy.orm import sessionmaker
 from flask_caching import Cache
 import stats
 
@@ -42,7 +42,7 @@ with SSHTunnelForwarder(
     token = Table('Token', metadata, autoload_with=engine)
     token2deliberation = Table('Token2Deliberation', metadata, autoload_with=engine)
 
-    # Create a single session with the db
+    # Create a single session with the database
     Session = sessionmaker(bind=engine)
     
     # Route for the homepage
@@ -87,30 +87,37 @@ with SSHTunnelForwarder(
 
     @app.route("/deliberation/<int:IDDelib>", methods=['GET', 'POST'])
     def get_deliberation(IDDelib):
+        IDDelib = IDDelib
         cache.set("IDDelib", IDDelib)
         latest_delib = cache.get("latest_delib")
-        search_result = cache.get("search_result")
+        search_result = cache.get("search_result")  
 
         if latest_delib is not None:
             for delib in latest_delib:
                 if delib.IDDelib == IDDelib:
                     deliberation=delib
-                    return render_template('deliberation.html', deliberation=deliberation)
-                
+                                    
         if search_result is not None:
             for delib in search_result:
-
                 if delib.IDDelib == IDDelib:
-                    deliberation=delib
+                    deliberation=delib                  
 
-                    return render_template('deliberation.html', deliberation=deliberation)
-
-        cache.set("deliberation", deliberation)
-        return redirect('index.html')
-
+        with Session() as db_session:
+            result = (
+                db_session.query(token.c.Token, token.c.Lemme, token.c.POS, token2deliberation.c.NbOcc)
+                    .join(token2deliberation, token.c.IDToken == token2deliberation.c.IDToken)
+                    .filter(token2deliberation.c.IDDelib == IDDelib)
+                    .order_by(token2deliberation.c.NbOcc.desc())
+                    .all()
+            )
         
+        word_freq = stats.word_frequency(result)
 
-    
+        wordcloud_data = [(t[0], t[-1]) for t in result]
+        word_cloud = stats.generate_wordcloud(wordcloud_data)
+
+        return render_template('deliberation.html', IDDelib=IDDelib, deliberation=deliberation, word_freq=word_freq, word_cloud=word_cloud)
+          
     @app.route("/resultats_recherche", methods=['POST', 'GET'])
     def get_results():
         if request.method == 'POST':
@@ -126,19 +133,16 @@ with SSHTunnelForwarder(
             with Session() as db_session:
                 # Construct the query
                 query = db_session.query(deliberation)
-
                 # Add conditions for the nature of the document and the nature of the deliberation
                 if nature_doc:
                     query = query.filter(deliberation.c.NatureDocument.in_(nature_doc))
                 if nature_delib:
                     query = query.filter(deliberation.c.NatureDeliberation.in_(nature_delib))
-
                 # Add conditions for the date range
                 if from_date:
                     query = query.filter(deliberation.c.DateTexte >= from_date)
                 if to_date:
                     query = query.filter(deliberation.c.DateTexte <= to_date)
-
                 # Add conditions for the title and text of the deliberation
                 if title_contains:
                     query = query.filter(deliberation.c.TitreLong.contains(title_contains))
@@ -148,10 +152,25 @@ with SSHTunnelForwarder(
                     query = query.filter(deliberation.c.Contenu.like(f"%{text_contains}%"))
                 if text_contains_not:
                     query = query.filter(~deliberation.c.Contenu.like(f"%{text_contains_not}%"))
-
                 # Execute the query and get the results
                 search_result = query.all()
+
                 cache.set("search_result", search_result)
+
+                result_list = []
+                for delib in search_result:
+                    result = (
+                        db_session.query(token.c.Token, token.c.Lemme, token.c.POS, token2deliberation.c.NbOcc)
+                            .join(token2deliberation, token.c.IDToken == token2deliberation.c.IDToken)
+                            .filter(token2deliberation.c.IDDelib == delib.IDDelib)
+                            .order_by(token2deliberation.c.NbOcc.desc()).all()
+                    )
+                    result_list.extend(result)
+
+                wordcloud_data = [(t[0], t[-1]) for t in result_list]
+
+                word_freq = stats.word_frequency(result_list)
+                word_cloud = stats.generate_wordcloud(wordcloud_data)
 
             return render_template('resultat_recherche.html',
                             nature_doc=nature_doc,
@@ -162,7 +181,8 @@ with SSHTunnelForwarder(
                             title_contains_not=title_contains_not,
                             text_contains=text_contains,
                             text_contains_not=text_contains_not,
-                            search_result=search_result)
+                            search_result=search_result, word_freq=word_freq,
+                            word_cloud=word_cloud)
 
     @app.route("/a_propos")
     def get_about():
@@ -210,87 +230,6 @@ with SSHTunnelForwarder(
             connection.starttls()
             connection.login(user=OWN_EMAIL, password=OWN_PASSWORD)
             connection.sendmail(from_addr=email, to_addrs=OWN_EMAIL, msg=email_msg.encode('utf-8'))
-
-    @app.route("/stats_deliberation", methods=['GET', 'POST'])
-    def stats_deliberation():
-        IDDelib = cache.get("IDDelib")
-
-        with Session() as db_session:
-            result = (
-                db_session.query(token.c.Token, token2deliberation.c.NbOcc)
-                    .join(token2deliberation, token.c.IDToken == token2deliberation.c.IDToken)
-                    .filter(token2deliberation.c.IDDelib == IDDelib)
-                    .order_by(token2deliberation.c.NbOcc.desc())
-                    .all()
-            )
-        
-        word_freq = stats.word_frequency(result)
-        word_cloud = stats.generate_wordcloud(result)
-
-        return render_template('stats_deliberation.html', IDDelib=IDDelib, word_freq=word_freq, word_cloud=word_cloud)
-    
-    @app.route("/get_ngram", methods=['POST'])
-    def get_ngram():
-        IDDelib = cache.get("IDDelib")
-
-        if request.method == 'POST':
-            text = request.form.get('text')
-            print("Mot pour ngram",text)
-            with Session() as db_session:
-                ngram = (
-                    db_session.query(deliberation.c.DateTexte, func.sum(token2deliberation.c.NbOcc))
-                        .join(token2deliberation, deliberation.c.IDDelib == token2deliberation.c.IDDelib)
-                        .join(token, token.c.IDToken == token2deliberation.c.IDToken)
-                        .filter(token.c.Token == text)
-                        .group_by(deliberation.c.DateTexte)
-                        .order_by(deliberation.c.DateTexte)
-                        .all()
-            )
-                
-                print("requete sql pour ngram: ",ngram)    
-                stats.n_gram(ngram, text)
-        
-        return render_template('stats_deliberation.html', IDDelib=IDDelib)
-
-    @app.route("/stats_recherche", methods=['GET', 'POST'])
-    def stats_recherche():
-        search_result = cache.get("search_result")
-        result_list = []
-        with Session() as db_session:
-            for delib in search_result:
-                result = (
-                    db_session.query(token.c.Token, token2deliberation.c.NbOcc)
-                        .join(token2deliberation, token.c.IDToken == token2deliberation.c.IDToken)
-                        .filter(token2deliberation.c.IDDelib == delib.IDDelib)
-                        .order_by(token2deliberation.c.NbOcc.desc()).all()
-                )
-                result_list.extend(result)
-        
-        result_tuples = [(word, count) for word, count in result_list]
-        result_tuples.sort(key=lambda tup: tup[1], reverse=True)
-        print(result_tuple)
-
-        word_freq = stats.word_frequency(result_tuples)
-        word_cloud = stats.generate_wordcloud(result_tuples)
-        
-        if request.method == 'POST':
-            text = request.form.get('text')
-            print("Mot pour ngram",text)
-            with Session() as db_session:
-                ngram_query = (
-                    db_session.query(deliberation.c.DateTexte, func.sum(token2deliberation.c.NbOcc))
-                        .join(token2deliberation, deliberation.c.IDDelib == token2deliberation.c.IDDelib)
-                        .join(token, token.c.IDToken == token2deliberation.c.IDToken)
-                        .filter(token.c.Token == text)
-                        .group_by(deliberation.c.DateTexte)
-                        .order_by(deliberation.c.DateTexte)
-                        .all()
-            )
-            
-            print("requete sql pour ngram: ",ngram_query)    
-            stats.n_gram(ngram_query, text)
-
-        return render_template('stats_recherche.html', word_freq=word_freq, word_cloud=word_cloud)
 
     @app.route("/concordance_et_chronogram")
     def autres_stats():

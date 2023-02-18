@@ -68,9 +68,12 @@ def n_gram(data, text="cnil"):
 def word_frequency(query):
 
     # create a dictionary mapping each word to its frequency
-    word_freq = {word: freq for word, freq in query if not word in stop_words}
+    # word_freq = {word: [freq, lemma, pos] for word,  [freq, lemma, pos] in query if not word in stop_words}
+    
+    word_freq = {word: {'freq': freq, 'lemma': lemma, 'pos': pos} for word, lemma, pos, freq in query if not word in stop_words}
 
     items = list(word_freq.items())
+    # items = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
     first_ten = items[:10]
 
     return first_ten
