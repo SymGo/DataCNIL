@@ -78,24 +78,24 @@ def word_frequency(query):
     word_freq = {word: freq for word, freq in query if not word in stop_words}
 
     items = list(word_freq.items())
-    first_five = items[:5]
+    first_ten = items[:10]
 
-    return first_five
+    return first_ten
 
 def generate_wordcloud(word_freq):
-
     # create a dictionary mapping each word to its frequency
     word_freq = {word: freq for word, freq in word_freq if not word in stop_words}
 
     # generate word cloud
-    wordcloud = WordCloud(background_color="white").generate_from_frequencies(word_freq)
+    wordcloud = WordCloud(background_color="#F5FAF7", font_path="static/fonts/Montserrat-Regular.ttf",
+        color_func=lambda *args, **kwargs: "#0f6336").generate_from_frequencies(word_freq)
 
     # render word cloud to in-memory buffer
     buf = BytesIO()
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis("off")
-    plt.tight_layout(pad=0)
-    plt.savefig(buf, format='png', dpi=300, bbox_inches='tight')
+    plt.tight_layout(pad=-1)
+    plt.savefig(buf, format='png', dpi=1000, bbox_inches='tight', pad_inches=0)
     buf.seek(0)
 
     # encode image data as Base64 string

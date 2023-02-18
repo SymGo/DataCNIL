@@ -9,6 +9,7 @@ from sqlalchemy.orm import sessionmaker, joinedload
 from flask_caching import Cache
 import stats
 
+
 # Constants for email and password
 OWN_EMAIL = 'marko.python.test@gmail.com'
 OWN_PASSWORD = 'ykordwhlvmciffbw'
@@ -102,7 +103,6 @@ with SSHTunnelForwarder(
 
     
     @app.route("/resultats_recherche", methods=['POST', 'GET'])
-    @cache.cached()
     def get_results():
         if request.method == 'POST':
             nature_doc = request.form.getlist('nature_doc_box')
@@ -244,10 +244,10 @@ with SSHTunnelForwarder(
         search_result = cache.get("search_result")
         return render_template('stats_recherche.html', search_result=search_result)
 
+    @app.route("/concordance_et_chronogram")
+    def autres_stats():
+        return render_template('autres_stats.html')
+
 
     if __name__ == '__main__':
         app.run(debug=True)
-
-
-
-
