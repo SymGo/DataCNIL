@@ -99,3 +99,33 @@ def generate_wordcloud(word_freq):
 
     # return Base64-encoded image data
     return base64_image
+
+def concordance(tuple_list, word, context_size = 10):
+    # Create a list to store the results
+    results = []
+
+    # Loop through each tuple in the list
+    for item in tuple_list:
+        text = item[-1]
+
+        # Define the left and right context as empty strings
+        left_context = ""
+        right_context = ""
+
+        # Split the text into sentences
+        doc = nlp(text)
+
+        # Loop over the tokens in the document
+        for i, token in enumerate(doc):
+            
+            # If the token matches the input word, extract the left and right context
+            if token.text.lower() == word.lower():
+                left_context = ' '.join([t.text for t in doc[max(i - context_size, 0):i]])
+                right_context = ' '.join([t.text for t in doc[i+1:i+1+context_size]])
+                
+
+                # Add the left and right context to the results list, along with the text identifier
+                results.append((item[0], item[1], left_context, token.text, right_context))
+
+    # Return the results
+    return results

@@ -16,7 +16,7 @@
     <hr class="hr-latest-results">
     <form method="POST" action=" {{ url_for('autres_stats') }}">
       <div style="margin: 0 30px; display: inline-flex;">
-        <input style="width: 195px; margin-right: 10px;" type="text" name="concordance-ngram">
+        <input style="width: 195px; margin-right: 10px;" type="text" name="search_term">
         <div class="other-search-button">
           <input type="submit" value="Recherche" id="smaller-button">
         </div>
@@ -25,22 +25,34 @@
     <h3>Concordancier</h3>
     <hr class="hr-latest-results">
     <div class="concordance-table">
-    <table>
-      <tr>
-        <td>ID</td>
-        <td>Date</td>
-        <td>Texte gauche</td>
-        <td>mot</td>
-        <td>Texte droit</td>
-      </tr>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </table>
+      <h2>Résultat(s) pour "{{ search_term }}"</h2>
+      <h2>{{ results | length }}  résultats trouvé(s)</h2>
+      {% if results %}
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Context gauche</th>
+            <th>Mot</th>
+            <th>Contexte droit</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for result in results %}
+          <tr>
+            <td>{{ result[0] }}</td>
+            <td>{{ result[1] }}</td>
+            <td>{{ result[2] }}</td>
+            <td>{{ result[3] }}</td>
+            <td>{{ result[4] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>No results found.</p>
+      {% endif %}
     </div>
     <h3>Chronogramme de mots</h3>
     <hr class="hr-latest-results">
