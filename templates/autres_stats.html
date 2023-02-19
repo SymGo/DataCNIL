@@ -10,7 +10,7 @@
 
 </div>
 
-<div class="bottom-container">
+<div class="bottom-container-other">
   <div class="about-container">
     <a href="{{ url_for('index') }}"><button type="button" name="button" class="about-button">Page d'accueil</button></a>
     <hr class="hr-latest-results">
@@ -25,13 +25,13 @@
     <h3>Concordancier</h3>
     <hr class="hr-latest-results">
     <div class="concordance-table">
-    <table>
+    <table class="other-stats-table">
       <tr>
-        <td>ID</td>
-        <td>Date</td>
-        <td>Texte gauche</td>
-        <td>mot</td>
-        <td>Texte droit</td>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Texte gauche</th>
+        <th>mot</th>
+        <th>Texte droit</th>
       </tr>
       <tr>
         <td></td>
@@ -44,10 +44,9 @@
     </div>
     <h3>Chronogramme de mots</h3>
     <hr class="hr-latest-results">
-    <div class="statistical-information">
-      <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="{{ url_for('static', filename='images/ngram.html') }}"></iframe>
+    <div>
+      <iframe width="100%" height="500px" frameborder="0" scrolling="no" src="{{ url_for('static', filename='images/ngram.html') }}"></iframe>
     </div>
   </div>
 </div>
 {% endblock %}
-

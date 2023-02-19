@@ -30,6 +30,13 @@ h4 {
     margin: 0;
 }
 
+th, td {
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+  color: #0f6336;
+  font-family: 'Montserrat';
+}
+
 select {
     font-family: 'Montserrat';
 }
@@ -66,15 +73,29 @@ select {
   position: relative;
 }
 
-.bottom-container, .bottom-container-page-delib {
+.bottom-container, .bottom-container-page-delib, .bottom-container-stats, .bottom-container-other {
   margin: auto;
   width: 90%;
   height: 650px;
   position: relative;
 }
 
+.bottom-container-other {
+    height: 830px;
+}
+
+.bottom-container-stats {
+    height: 550px;
+}
+
 .bottom-container-page-delib {
     height: 1250px;
+}
+
+.other-stats-table {
+    width: 95%;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .advanced-search {
@@ -241,7 +262,7 @@ hr {
 
 .stats-button, .autre-stats-button {
   position: absolute;
-  top: 15px;
+  top: 0;
   right: 25px;
 }
 
@@ -278,8 +299,7 @@ textarea {
     position: relative;
     padding: 5px 25px;
     border-radius: 5px;
-    height: 450px;
-    overflow-y: scroll;
+    height: 400px;
 }
 
 .single-delib-most-freq {
@@ -289,15 +309,21 @@ textarea {
     margin-top: 3px;
 }
 
+.word-freq {
+    position: absolute;
+    left: 0;
+    margin-left: 75px;
+}
+
 .word-cloud {
     position: absolute;
     right: 0;
-    margin-right: 15px;
+    margin-right: 75px;
 }
 
 .word-cloud-img {
-    width: 550px;
-    height: 350px;
+    width: 500px;
+    height: 300px;
     display: block;
     margin: auto;
 }
@@ -313,6 +339,10 @@ textarea {
     width: 750px;
     height: 900px;
     background-color: black;
+}
+
+.search-stats {
+    padding: 20px 0;
 }
 
 button, .message-submit, .search-button input[type="submit"], .other-search-button input[type="submit"] {
