@@ -234,27 +234,34 @@ with SSHTunnelForwarder(
     @app.route("/concordance_et_chronogram", methods=['POST', 'GET'])
     def autres_stats():
         if request.method == 'POST':
-            text = request.form.get('concordance-ngram')
-            print(text)
+            search_term = request.form.get('search_term')
+            # text = request.form.get('concordance-ngram')
 
             with Session() as db_session:
+                left_context_length = 20  # length of left context
+                right_context_length = 20  # length of right context
                 concordance_query = (
-                    db_session.query(deliberation.c.Contenu.like(f"%{text}%"))
-                )
+                    db_session.query(deliberation.c.IDDelib, deliberation.c.DateTexte, deliberation.c.Contenu) 
+                        .filter(deliberation.c.Contenu.like(f'%{search_term}%')).all())
+
                 ngram_query = (
                     db_session.query(deliberation.c.DateTexte, func.sum(token2deliberation.c.NbOcc))
                         .join(token2deliberation, deliberation.c.IDDelib == token2deliberation.c.IDDelib)
                         .join(token, token.c.IDToken == token2deliberation.c.IDToken)
-                        .filter(token.c.Token == text)
+                        .filter(token.c.Token == search_term)
                         .group_by(deliberation.c.DateTexte)
                         .order_by(deliberation.c.DateTexte)
                         .all()
-                )   
-                print(concordance_query)
+                )
+        
+            stats.n_gram(ngram_query, search_term)
+            concordance = stats.concordance(concordance_query, search_term)
+        
+            return render_template('autres_stats.html', search_term=search_term, results=concordance)
+        
+        else:
 
-            stats.n_gram(ngram_query, text)
-
-        return render_template('autres_stats.html')
+            return render_template('autres_stats.html')
 
 
     if __name__ == '__main__':
