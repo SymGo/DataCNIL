@@ -13,12 +13,10 @@
 <div class="bottom-container-page-delib">
   <div class="delib-container">
     <a href="{{ url_for('index') }}"><button type="button" name="button" class="about-button">Page d'accueil</button></a>
-    <div class="stats-button">
-    <a href=""><button type="button" name="button" class="about-button">Autres stats</button></a>
-    </div>
+
 
     <hr class="hr-latest-results">
-    <h1>Resultat</h1>
+    <h1>Délibération</h1>
 
     <div class="chosen-article">
       <h3>{{ deliberation['IDCNIL'] }}</h3>
@@ -44,22 +42,28 @@
     <div class="single-delib-stats">
       <div class="word-freq">
         <h3>Les mots les plus fréquents</h3>
-        <table>
-          <tr>
-            <td>Mot</td>
-            <td>POS</td>
-            <td>Lemme</td>
-            <td>Fréquence</td>
-          </tr>
-          {% for key, value in word_freq: %}
-          <tr>
-            <td>{{ key }}</td>
-            <td>{{ value["pos"] }}</td>
-            <td>{{ value["lemma"] }}</td>
-            <td>{{ value["freq"] }}</td>
-          </tr>
-          {% endfor %}
-        </table>
+        <div class="frequency-table">
+          <table>
+            <thead class="tr-word-freq">
+              <tr>
+                <th>Mot</th>
+                <th>POS</th>
+                <th>Lemme</th>
+                <th>Fréquence</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for key, value in word_freq: %}
+              <tr>
+                <td>{{ key }}</td>
+                <td>{{ value["pos"] }}</td>
+                <td>{{ value["lemma"] }}</td>
+                <td>{{ value["freq"] }}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class="word-cloud">
         <h3>Nuage de mots</h3>

@@ -94,21 +94,55 @@
         </article>
       </div>
 
-      <h3>Informations statistiques</h3>
+      <h3>Informations générales</h3>
       <hr class="hr-latest-results">
       <div class="statistical-information">
         <iframe width="100%" height="100%" frameborder="0" scrolling="no" src="{{ url_for('static', filename='images/delib.html') }}"></iframe>
-      </div>
-      <div>
-        <h3>Nuage de mots</h3>
-        <img style="width: 400px; height: 300px;" src="data:image/png;base64,{{ word_cloud_all }}" alt="Word Cloud">
       </div>
 
       <h3>Avertissement</h3>
       <hr class="hr-latest-results">
       <div class="extra-information">
+        <ul>
+          <li>Sur les données</li>
+          <ul>
+            <li>
+              Les données sont 'Les délibérations de la CNIL' ;
+            </li>
+            <li>
+              Dans la base de données il y a {{ nb_delib }} délibérations ;
+            </li>
+          </ul>
 
+          <li>Sur le moteur de recherche</li>
+          <ul>
+            <li>
+              La recherche se fait par extraction des délibérations correspondant à l'ensemble des critères demandés (ET logique)
+            </li>
+            <li>
+              Le critère de date :
+              <ul>
+                <li>
+                  Il est inclusif de la date donnée
+                </li>
+                <li>
+                  La date (JJ/MM/AAAA) doit exister dans le calendrier
+                </li>
+              </ul>
+            </li>
+            <li>Les champs 'titre' et 'texte' :
+              <ul>
+                <li>
+                  la recherche se fait en texte plein, sans distinction majuscules/minuscules
+                </li>
+                <li>
+                  c'est possible de faire une recherche sur une suite de mots
+                </li>
+              </ul>
+            </li>
+          </ul>
 
+        </ul>
       </div>
     </div>
   </div>

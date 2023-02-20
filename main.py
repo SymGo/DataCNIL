@@ -77,13 +77,17 @@ with SSHTunnelForwarder(
                     .order_by(token2deliberation.c.NbOcc.desc())
                     .all()
             )
+            nb_delib = (
+                db_session.query(func.count(deliberation.c.IDDelib)).all()
+            )
 
+            nb_delib_count = nb_delib[0][0]
             word_cloud_all = stats.generate_wordcloud(global_wordcloud)
             stats.bar_chart(bar_chart)
 
             cache.set("latest_delib", latest_delib)
 
-        return render_template('index.html', nature_doc=nature_doc, nature_delib=nature_delib, latest_delib=latest_delib, word_cloud_all=word_cloud_all)
+        return render_template('index.html', nb_delib=nb_delib_count, nature_doc=nature_doc, nature_delib=nature_delib, latest_delib=latest_delib, word_cloud_all=word_cloud_all)
 
     @app.route("/deliberation/<int:IDDelib>", methods=['GET', 'POST'])
     def get_deliberation(IDDelib):
@@ -110,6 +114,10 @@ with SSHTunnelForwarder(
                     .order_by(token2deliberation.c.NbOcc.desc())
                     .all()
             )
+            if deliberation == None:
+                deliberation = (
+                    db_session.query(deliberation.c).filter(deliberation.c.IDDelib == IDDelib).all()
+                )
         
         word_freq = stats.word_frequency(result)
 

@@ -8,6 +8,9 @@ import plotly.express as px
 import spacy
 from spacy.lang.fr.stop_words import STOP_WORDS
 
+
+
+
 # load the French language model
 nlp = spacy.load("fr_core_news_sm", disable=["parser", "ner"])
 
@@ -74,31 +77,34 @@ def word_frequency(query):
 
     items = list(word_freq.items())
     # items = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)
-    first_ten = items[:10]
+    first_ten = items[:15]
 
     return first_ten
 
 def generate_wordcloud(word_freq):
-    # create a dictionary mapping each word to its frequency
-    word_freq = {word: int(freq) for word, freq in word_freq if not word in stop_words}
+    if len(word_freq):
+        # create a dictionary mapping each word to its frequency
+        word_freq = {word: int(freq) for word, freq in word_freq if not word in stop_words}
 
-    # generate word cloud
-    wordcloud = WordCloud(background_color="#F5FAF7", font_path="static/fonts/Montserrat-Regular.ttf",
-        color_func=lambda *args, **kwargs: "#0f6336").generate_from_frequencies(word_freq)
+        # generate word cloud
+        wordcloud = WordCloud(background_color="#F5FAF7", font_path="static/fonts/Montserrat-Regular.ttf",
+            color_func=lambda *args, **kwargs: "#0f6336").generate_from_frequencies(word_freq)
 
-    # render word cloud to in-memory buffer
-    buf = BytesIO()
-    plt.imshow(wordcloud, interpolation='bilinear')
-    plt.axis("off")
-    plt.tight_layout(pad=-1)
-    plt.savefig(buf, format='png', dpi=1000, bbox_inches='tight', pad_inches=0)
-    buf.seek(0)
+        # render word cloud to in-memory buffer
+        buf = BytesIO()
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.axis("off")
+        plt.tight_layout(pad=-1)
+        plt.savefig(buf, format='png', dpi=1000, bbox_inches='tight', pad_inches=0)
+        buf.seek(0)
 
-    # encode image data as Base64 string
-    base64_image = base64.b64encode(buf.getvalue()).decode('utf-8')
+        # encode image data as Base64 string
+        base64_image = base64.b64encode(buf.getvalue()).decode('utf-8')
 
-    # return Base64-encoded image data
-    return base64_image
+        # return Base64-encoded image data
+        return base64_image
+    else:
+        return 0
 
 def concordance(tuple_list, word, context_size = 10):
     # Create a list to store the results

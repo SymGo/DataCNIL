@@ -24,12 +24,12 @@
     </form>
     <h3>Concordancier</h3>
     <hr class="hr-latest-results">
+    <h2 class="concordance-results">Résultat(s) pour "{{ search_term }}"</h2>
+    <h2 class="concordance-results">{{ results | length }}  résultats trouvé(s)</h2>
     <div class="concordance-table">
-      <h2>Résultat(s) pour "{{ search_term }}"</h2>
-      <h2>{{ results | length }}  résultats trouvé(s)</h2>
       {% if results %}
       <table>
-        <thead>
+        <thead class="tr-concordance">
           <tr>
             <th>ID</th>
             <th>Date</th>

@@ -69,7 +69,7 @@ select {
 .bottom-container-homepage {
   margin: auto;
   width: 90%;
-  height: 1850px;
+  height: 1440px;
   position: relative;
 }
 
@@ -81,7 +81,7 @@ select {
 }
 
 .bottom-container-other {
-    height: 830px;
+    height: 1150px;
 }
 
 .bottom-container-stats {
@@ -162,6 +162,18 @@ label {
     overflow-y: auto;
 }
 
+.p-a-propos {
+    font-family: 'Montserrat';
+    color: #0f6336;
+    margin: 0 30px;
+}
+
+.tr-concordance {
+    position: sticky;
+    top: 0;
+    background-color: white;
+}
+
 hr {
   border-style: dotted none none;
   border-color: #6ca486;
@@ -174,7 +186,7 @@ hr {
 
 .results {
   background-color: white;
-  height: 1850px;
+  height: 1440px;
   width: 76%;
   margin-left: 8px;
   display: inline-block;
@@ -199,8 +211,15 @@ hr {
   border-radius: 5px;
 }
 
+.concordance-results {
+    color: #0f6336;
+    margin-left: 30px;
+}
+
 .extra-information {
   height: 450px;
+  font-family: 'Montserrat';
+  padding: 15px 0 0;
 }
 
 .hr-latest-results {
@@ -223,6 +242,12 @@ hr {
   font-family: 'Montserrat';
   font-weight: lighter;
   white-space: normal;
+}
+
+.search-results-p {
+    font-family: 'Montserrat';
+    color: #0f6336;
+    padding: 15px 15px;
 }
 
 .a-tag {
@@ -252,8 +277,15 @@ hr {
   border-radius: 5px;
 }
 
-.delib-container {
+.frequency-table {
+    max-height: 285px;
+    overflow-y: auto;
+}
 
+.tr-word-freq {
+    position: sticky;
+    top: 0;
+    background-color: #F5FAF7;
 }
 
 .about-button {
@@ -264,6 +296,10 @@ hr {
   position: absolute;
   top: 0;
   right: 25px;
+}
+
+.autre-stats-button {
+  top: 15px;
 }
 
 #contact-button {
@@ -410,8 +446,10 @@ button:disabled {
     font-family: 'Montserrat';
     position: relative;
     display: inline-flex;
-    margin: 0 auto;
-    width: 100%;
+    margin: 0 30px;
+    width: 95%;
+    max-height: 300px;
+    overflow-y: auto;
     justify-content: center;
 }
 
@@ -453,6 +491,7 @@ button:disabled {
   border: 1px solid #ccc;
   padding: 10px;
   z-index: 1;
+  max-height: 250px;
   overflow-y: scroll;
 }
 
